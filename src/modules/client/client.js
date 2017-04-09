@@ -1,4 +1,4 @@
-﻿import OptimalRoute from './../optimalRoute';
+﻿import OptimalRoutesCollection from './../optimalRoutesCollection';
 import ApiConfig from './../apiConfig';
 import $ from 'jquery';
 var apiPublicTransportServer = ApiConfig.apiPublicTransportServer;
@@ -77,17 +77,16 @@ class AppClient {
             
             var startInitializingMoment = Date.now();
             AppClient.findedOptimalWays = data;
-            //AppClient.customizeFindedOptimalWays();
-            //loadedFromServer = true;
+            
             console.log("Finded " + AppClient.findedOptimalWays.length + " optimal routes. Time = " + (Date.now() - startInitializingMoment) + " ms.");
             return data;
 
         } catch (e) {
             console.log("Start local counting...");
             var startInitializingMoment = Date.now();
-            var res = new OptimalRoute(startOptimalRoutePoint, finalOptimalRoutePoint, myStartTime, types, parseFloat(my_speed), parseFloat(my_dopTimeMinutes));
-            AppClient.findedOptimalWays = res.GetOptimalWays();
-            //AppClient.customizeFindedOptimalWays();
+            var res = new OptimalRoutesCollection(startOptimalRoutePoint, finalOptimalRoutePoint, myStartTime, types, parseFloat(my_speed), parseFloat(my_dopTimeMinutes));
+            AppClient.findedOptimalWays = res.getOptimalWays();
+            
             console.log("Finded " + AppClient.findedOptimalWays.length + " optimal routes. Time = " + (Date.now() - startInitializingMoment) + " ms.");
 
             return AppClient.findedOptimalWays;

@@ -1,6 +1,6 @@
 ﻿class Point {
     constructor(totalTimeSeconds, station_or_crds, fromWhichStation, fromWhichRoute) {
-        if (station_or_crds.hashcode != undefined) {
+        if (station_or_crds.hashcode !== undefined) {
             this.station = station_or_crds;
             this.stationCode = station_or_crds.hashcode;
             station_or_crds.point = this;
@@ -60,7 +60,7 @@
         var tmpP = this;
         //this.points.Add(tmpP.ToString());
         while (tmpP.previousPoint != null) {
-            if (tmpP.fromWhichRoute != null && tmpP.fromWhichRoute.hashcode != null && tmpP.fromWhichRoute != tmpP.previousPoint.fromWhichRoute) result++;
+            if (tmpP.fromWhichRoute != null && tmpP.fromWhichRoute.hashcode != null && tmpP.fromWhichRoute !== tmpP.previousPoint.fromWhichRoute) result++;
             tmpP = tmpP.previousPoint;
         }
         return result;

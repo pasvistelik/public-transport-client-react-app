@@ -95,7 +95,7 @@ class Points {
                             // Загружаем расписание:
                             var table = selectedRoute.getTimetable(selectedPointStation);//Database.getTimetable(selectedPointStation.hashcode, selectedRoute.hashcode, databaseMysqlConnection, canReadDataFromLocalCopy: true);
                             // Блокируем попытку попасть указанным транспортом на указанную остановку:
-                            if (myIgnoringFragments.contains(nextStation.hashcode/*nextCode*/, selectedRoute.hashcode, selectedPointStationHashcode)) continue;
+                            if (myIgnoringFragments!= null && myIgnoringFragments.contains(nextStation.hashcode/*nextCode*/, selectedRoute.hashcode, selectedPointStationHashcode)) continue;
 
                             if (table.type == TableType.table) // Если это точное расписание, то:
                             {
@@ -143,7 +143,7 @@ class Points {
             for (var j = 0, m = this.collection.length, p = this.collection[0], distanceToSelectedPoint, goingTime, newTime; j < m; p = this.collection[++j])
                 if (!p.isVisited && p != selectedPoint) {
                     // Блокируем попытку дойти пешком до указанной остановки:
-                    if (myIgnoringFragments.contains(p.stationCode, null, selectedPointStationHashcode)) continue;
+                    if (myIgnoringFragments != null && myIgnoringFragments.contains(p.stationCode, null, selectedPointStationHashcode)) continue;
 
                     distanceToSelectedPoint = distance(selectedPointCoords, p.coords);
                     
@@ -157,7 +157,7 @@ class Points {
                     }
                 }
 
-            if (myIgnoringFragments.contains(null, null, selectedPointStationHashcode)) continue;
+            if (myIgnoringFragments != null && myIgnoringFragments.contains(null, null, selectedPointStationHashcode)) continue;
             
             var tryingNewTime = selectedPointTotalTimeSeconds + getTimeForGoingTo(distance(selectedPointCoords, this.finalPoint.coords), speed);
             if (this.finalPoint.tryUpdate(tryingNewTime, selectedPoint, selectedPointStation, null)) {

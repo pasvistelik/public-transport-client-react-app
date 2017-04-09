@@ -32,17 +32,17 @@ class OptimalRoute {
 
         this.types = types;
 
-        var myIgnoringFragments = null;
-        if (ignoringList != null) myIgnoringFragments = new IgnoringFragments(ignoringList);
-        else myIgnoringFragments = new IgnoringFragments();
+        this.myIgnoringFragments = null;
+        //if (ignoringList != null) this.myIgnoringFragments = new IgnoringFragments(ignoringList);
+        //else this.myIgnoringFragments = new IgnoringFragments();
 
         var myPoints = new Points(nowPos, needPos);
         // Получим "начальный" список станций:
         var stationsList = getStationsAround(myPoints.startPoint.coords, distance(myPoints.startPoint.coords, myPoints.finalPoint.coords));
-        myPoints.fillStartData(stationsList, goingSpeed, reservedTimeSeconds, myIgnoringFragments);
+        myPoints.fillStartData(stationsList, goingSpeed, reservedTimeSeconds, this.myIgnoringFragments);
 
         // Находим кратчайшие пути до всех вершин:
-        myPoints.countShortWay(this.ignoringRoutes, myIgnoringFragments, time, types, goingSpeed, reservedTimeSeconds);
+        myPoints.countShortWay(this.ignoringRoutes, this.myIgnoringFragments, time, types, goingSpeed, reservedTimeSeconds);
 
         var tmpP = myPoints.finalPoint;
         this.points.push(tmpP.toString());////
@@ -58,7 +58,6 @@ class OptimalRoute {
         this.totalTransportChangingCount = myPoints.finalPoint.getTotalTransportChangingCount();
 
         this.myPoints = myPoints;
-        this.myIgnoringFragments = myIgnoringFragments;
 
 
         this.isVisited = false;

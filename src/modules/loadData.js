@@ -12,7 +12,7 @@ var allStations = null;
 var allRoutes = null;
 var allTimetables = null;
 
-var updatingFromServerInterval = 5000;
+//var updatingFromServerInterval = 5000;
 
 var loadingStarted = false;
 
@@ -73,13 +73,13 @@ function loadData() {
         });*/
 
 
-        if (localStorage["allStationsJSON"] == undefined || localStorage["allStationsJSON"] == null) {
+        if (localStorage["allStationsJSON"] === undefined || localStorage["allStationsJSON"] == null) {
             console.log("Downloading stations from server...");
             var strGetStations = apiPublicTransportServer + "stations/";
             fetch(strGetStations).then(function (response) {
                 response.text().then(function (data) {
                     allStations = JSON.parse(allStationsJSON = data);
-                    if (allStations != undefined && allStations != null) localStorage["allStationsJSON"] = allStationsJSON;
+                    if (allStations !== undefined && allStations != null) localStorage["allStationsJSON"] = allStationsJSON;
                     allStationsLoaded = true;
                     console.log("Stations loaded from server.");
                 });
@@ -91,13 +91,13 @@ function loadData() {
             console.log("Stations loaded from localStorage.");
         }
 
-        if (localStorage["allRoutesJSON"] == undefined || localStorage["allRoutesJSON"] == null) {
+        if (localStorage["allRoutesJSON"] === undefined || localStorage["allRoutesJSON"] == null) {
             console.log("Downloading routes from server...");
             var strGetRoutes = apiPublicTransportServer + "routes/";
             fetch(strGetRoutes).then(function (response) {
                 response.text().then(function (data) {
                     allRoutes = JSON.parse(allRoutesJSON = data);
-                    if (allRoutes != undefined && allRoutes != null) localStorage["allRoutesJSON"] = allRoutesJSON;
+                    if (allRoutes !== undefined && allRoutes != null) localStorage["allRoutesJSON"] = allRoutesJSON;
                     allRoutesLoaded = true;
                     console.log("Routes loaded from server.");
                 });
@@ -109,13 +109,13 @@ function loadData() {
             console.log("Routes loaded from localStorage.");
         }
 
-        if (localStorage["allTimetablesJSON"] == undefined || localStorage["allTimetablesJSON"] == null) {
+        if (localStorage["allTimetablesJSON"] === undefined || localStorage["allTimetablesJSON"] == null) {
             console.log("Downloading timetables from server...");
             var strGetTimetables = apiPublicTransportServer + "timetables/";
             fetch(strGetTimetables).then(function (response) {
                 response.text().then(function (data) {
                     allTimetables = JSON.parse(allTimetablesJSON = data);
-                    if (allTimetables != undefined && allTimetables != null) localStorage["allTimetablesJSON"] = allTimetablesJSON;
+                    if (allTimetables !== undefined && allTimetables != null) localStorage["allTimetablesJSON"] = allTimetablesJSON;
                     allTimetablesLoaded = true;
                     console.log("Timetables loaded from server.");
                 });

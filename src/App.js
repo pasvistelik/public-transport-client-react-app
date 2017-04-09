@@ -22,7 +22,6 @@ class MyApp extends Component {
       selectedTime: "12:00",
       selectedGoingSpeed: 5,
       selectedReservedTime: 2,
-      finalPointSearchInputValue: '',
 
       totalTimePercentValue: 1,
       totalGoingTimePercentValue: 0.5,
@@ -171,7 +170,7 @@ class MyApp extends Component {
         $("#start_route").css("display", "none");
         $("#buttonCountWay").css("display", "none");
         $("#waiting_route").css("display", "inherit");
-        var types = new Array();
+        var types = [];
         if(this.state.busChecked) types.push("bus");
         if(this.state.trolleybusChecked) types.push("trolleybus");
         $("input:checkbox[name=transportType]:checked").each(function () {
