@@ -1,6 +1,6 @@
 ﻿import OptimalRoutesCollection from './../optimalRoutesCollection';
 import ApiConfig from './../apiConfig';
-import $ from 'jquery';
+//import $ from 'jquery';
 var apiPublicTransportServer = ApiConfig.apiPublicTransportServer;
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -39,61 +39,16 @@ class AppClient {
     static my_dopTimeMinutes = 2;
 
 
-    static strToCoords(str) {
-        if (str === undefined || str == null) return undefined;
-        var tmp = str.split(',');
-        var myLat = parseFloat(tmp[0]);
-        var myLng = parseFloat(tmp[1]);
-        if (myLat >= -90 && myLat <= 90 && myLng >= -180 && myLng <= 180) return { lat: myLat, lng: myLng };
-        else return undefined;
-    }
-    static strToSeconds(str) {
-            if (str === undefined || str == null) return undefined;
-            var tmp = str.split(':');
-            var hours = parseInt(tmp[0]);
-            var minutes = parseInt(tmp[1]);
-            if (hours >= 0 && hours < 24 && minutes >= 0 && minutes < 60) return 3600 * hours + 60 * minutes;
-            else return undefined;
-        }
+    // Find optimal ways between two points. The start time, reserved time, going speed and transport types are known.
     static async findWays(fromPositionStr, toPositionStr, myStartTimeStr, my_dopTimeMinutes, my_speed, typesStr) {
-
-        var startOptimalRoutePoint = AppClient.strToCoords(fromPositionStr);
-        var finalOptimalRoutePoint = AppClient.strToCoords(toPositionStr);
-        var myStartTime = AppClient.strToSeconds(myStartTimeStr);
-
-        if (startOptimalRoutePoint === undefined || finalOptimalRoutePoint === undefined || myStartTime === undefined) return null;
-        
-        var types = null;
-        if (typesStr !== undefined) types = typesStr.split(',');
-        if (types === undefined || types == null) types = ["bus", "trolleybus"];
-
-        //var loadedFromServer = false;
-        //var result = null;
-        var paramsStr = "?from=" + fromPositionStr + "&to=" + toPositionStr + "&startTime=" + myStartTimeStr + "&dopTimeMinutes=" + my_dopTimeMinutes + "&goingSpeed=" + my_speed + "&transportTypes=" + typesStr;
-        
-        try {
-            var response = await fetch(apiPublicTransportServer + "optimalRoute" + paramsStr);
-            var data = await response.json();
-            
-            var startInitializingMoment = Date.now();
-            AppClient.findedOptimalWays = data;
-            
-            console.log("Finded " + AppClient.findedOptimalWays.length + " optimal routes. Time = " + (Date.now() - startInitializingMoment) + " ms.");
-            return data;
-
-        } catch (e) {
-            console.log("Start local counting...");
-            var startInitializingMoment = Date.now();
-            var res = new OptimalRoutesCollection(startOptimalRoutePoint, finalOptimalRoutePoint, myStartTime, types, parseFloat(my_speed), parseFloat(my_dopTimeMinutes));
-            AppClient.findedOptimalWays = res.getOptimalWays();
-            
-            console.log("Finded " + AppClient.findedOptimalWays.length + " optimal routes. Time = " + (Date.now() - startInitializingMoment) + " ms.");
-
-            return AppClient.findedOptimalWays;
-        }
-        
+        try { // Пробуем получить оптимальные пути с сервера.
+            return await getCountedOnServerWays(fromPositionStr, toPositionStr, myStartTimeStr, my_dopTimeMinutes, my_speed, typesStr);
+        } catch (e) { // Иначе выполняем все расчеты на клиенте.
+            return getCountedOnClientWays(fromPositionStr, toPositionStr, myStartTimeStr, my_dopTimeMinutes, my_speed, typesStr);
+        } 
     }
 
+    // Sort the finded ways with the importance of each criterion.
     static customizeFindedOptimalWaysStart(totalTimePercentValue, totalGoingTimePercentValue, totalTransportChangingCountPercentValue) {
         if (AppClient.findedOptimalWays != null) {
             AppClient.totalTimePercent = totalTimePercentValue;
@@ -137,18 +92,28 @@ class AppClient {
             }
             return AppClient.sortedArr;
         }
+        else {
+            throw new Error('Can`t customize optimal ways, because it`s not finded yet.');
+        }
     }
 
     static async findCurrentDestinationCoords() {
         if (navigator.geolocation) {
 
-            async function getCurrentPositionDeferred() {
+            /*async function getCurrentPosition() {
                 var deferred = $.Deferred();
                 navigator.geolocation.getCurrentPosition(deferred.resolve, deferred.reject);
                 return await deferred.promise();
-            };
+            }*/
 
-            var position = await getCurrentPositionDeferred();
+            async function getCurrentPosition() {
+                var promise = new Promise(function (resolve, reject) {
+                    navigator.geolocation.getCurrentPosition(resolve, reject);
+                });
+                return await promise;
+            }
+
+            var position = await getCurrentPosition();
             if (position === undefined || position == null) return null;
 
             var findedLat = parseFloat(position.coords.latitude.toFixed(4));
@@ -169,22 +134,19 @@ class AppClient {
 
     static async getDesinationDescription(coords) {
         try {
-            var response = await fetch("https://nominatim.openstreetmap.org/search?format=json&q=" + coords.lat + "," + coords.lng);
-            var data = await response.json();
+            var data = await getJsonFromUrl("https://nominatim.openstreetmap.org/search?format=json&q=" + coords.lat + "," + coords.lng);
             if (data != null && data.length != 0) {
                 return data[0].display_name;
             }
             return null;
         } catch (e) {
-            //console.log("Booo");
             return null;
         }
     }
 
     static async getPointCoordsFromOsmGeocodingApi(strReq) {
         try {
-            var response = await fetch("https://nominatim.openstreetmap.org/search?q=" + strReq + "&format=json");
-            var data = await response.json();
+            var data = await getJsonFromUrl("https://nominatim.openstreetmap.org/search?q=" + strReq + "&format=json");
             if (data != null && data.length != 0) {
                 var tmpPoint =  data[0];
                 var resultCoords = { lat: parseFloat(tmpPoint.lat), lng: parseFloat(tmpPoint.lon)};
@@ -196,6 +158,61 @@ class AppClient {
         }
     }
 
+}
+
+function strToCoords(str) {
+    if (str === undefined || str == null) return undefined;
+    var tmp = str.split(',');
+    var myLat = parseFloat(tmp[0]);
+    var myLng = parseFloat(tmp[1]);
+    if (myLat >= -90 && myLat <= 90 && myLng >= -180 && myLng <= 180) return { lat: myLat, lng: myLng };
+    else return undefined;
+}
+function strToSeconds(str) {
+    if (str === undefined || str == null) return undefined;
+    var tmp = str.split(':');
+    var hours = parseInt(tmp[0]);
+    var minutes = parseInt(tmp[1]);
+    if (hours >= 0 && hours < 24 && minutes >= 0 && minutes < 60) return 3600 * hours + 60 * minutes;
+    else return undefined;
+}
+
+async function getJsonFromUrl(strReq) {
+    var response = await fetch(strReq);
+    return await response.json();
+}
+
+async function getCountedOnServerWays(fromPositionStr, toPositionStr, myStartTimeStr, my_dopTimeMinutes, my_speed, typesStr) {
+    var paramsStr = "?from=" + fromPositionStr + "&to=" + toPositionStr + "&startTime=" + myStartTimeStr + "&dopTimeMinutes=" + my_dopTimeMinutes + "&goingSpeed=" + my_speed + "&transportTypes=" + typesStr;
+        
+    var data = await getJsonFromUrl(apiPublicTransportServer + "optimalRoute" + paramsStr);
+    
+    AppClient.findedOptimalWays = data;
+    
+    console.log("Finded " + AppClient.findedOptimalWays.length + " optimal routes.");
+    return data;
+}
+
+function getCountedOnClientWays(fromPositionStr, toPositionStr, myStartTimeStr, my_dopTimeMinutes, my_speed, typesStr) {
+    console.log("Start local counting...");
+
+    var startOptimalRoutePoint = strToCoords(fromPositionStr);
+    var finalOptimalRoutePoint = strToCoords(toPositionStr);
+    var myStartTime = strToSeconds(myStartTimeStr);
+
+    if (startOptimalRoutePoint === undefined || finalOptimalRoutePoint === undefined || myStartTime === undefined) return null;
+
+    var types = null;
+    if (typesStr !== undefined) types = typesStr.split(',');
+    if (types === undefined || types == null) types = ["bus", "trolleybus"];
+
+    var startInitializingMoment = Date.now();
+    var res = new OptimalRoutesCollection(startOptimalRoutePoint, finalOptimalRoutePoint, myStartTime, types, parseFloat(my_speed), parseFloat(my_dopTimeMinutes));
+    AppClient.findedOptimalWays = res.getOptimalWays();
+    
+    console.log("Finded " + AppClient.findedOptimalWays.length + " optimal routes. Time = " + (Date.now() - startInitializingMoment) + " ms.");
+
+    return AppClient.findedOptimalWays;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
