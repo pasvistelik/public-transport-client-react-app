@@ -180,13 +180,6 @@
             border: 2px dashed #ccc;
         }
 
-
-        #startPointBlockButtonChange, #finalPointBlockButtonChange, input[name=startPointSearch], input[name=startPointSearchButton] {
-            display: none;
-        }
-        #advanced_params_and_button, #waiting_route, #results, #customization {
-            display: none;
-        }
         #start-final_points {
             background-color: white;
         }
