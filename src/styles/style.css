@@ -15,67 +15,6 @@
             /*font-family: 'Times New Roman';*/
         }
 
-        header {
-            width: 100%;
-            text-align: center;
-            background-color: #5c5c5c;
-            border-bottom: 1px dashed #3c3c3c;
-        }
-
-            header nav {
-                min-width: 150px;
-            }
-
-            header * {
-                display: inline-block;
-                text-align: left;
-                white-space: normal;
-            }
-
-            header > nav > ul {
-                white-space: nowrap;
-            }
-
-            header li a, header li a:visited {
-                color: #ccc;
-                display: inline-block;
-                background-color: #5c5c5c;
-                padding: calc((5 * 0.5vw + 3px)/6);
-                padding-top: 10px;
-                padding-bottom: 10px;
-                font: calc((2.5 * 1.4vw + 1.5 * 11px)/4) Calibri;
-                text-decoration: none;
-            }
-
-                header li a:hover {
-                    background-color: #4c4c4c;
-                }
-
-                header li a:active {
-                    background-color: #3c3c3c;
-                }
-
-            header li ul {
-                display: none;
-            }
-
-            header li:hover > ul {
-                width: calc((2 * 20vw + 80px)/3); /*/23vw;//250px;*/
-                display: inline-block;
-                position: absolute;
-                border: 1px dashed #2c2c2c;
-                border-top: none;
-            }
-
-                header li:hover > ul > li {
-                    width: 100%;
-                }
-
-                header li:hover > ul a {
-                    display: block;
-                    border-top: 1px dashed #2c2c2c;
-                }
-
         #page {
             border-top: 1px dashed #9c9c9c;
             width: 100%;
@@ -97,31 +36,7 @@
                 margin: 0px;
             }
 
-        table {
-            width: 100%;
-            margin: 5px auto;
-        }
-
-        table, td {
-            border-collapse: collapse;
-            border: 1px solid #5c5c5c;
-        }
-
-        td {
-            padding: 10px !important;
-        }
-
-        #content video, #content img {
-            display: block;
-            width: 100%;
-            border: 1px dotted #ccc;
-            margin: 5px auto;
-        }
-
-        #content video {
-            height: 400px;
-        }
-
+     
         #content li {
             margin-left: 20px !important;
         }
