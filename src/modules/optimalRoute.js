@@ -9,7 +9,7 @@ import MyDatabase from './loadData';
 var allStations = null;
 
 function getStationsAround(coords, radius) {
-    if(allStations == null) allStations =  MyDatabase.getAllStations();
+    if(allStations == null) allStations = MyDatabase.getAllStations();
     var result = new Array();
     for (var i = 0, n = allStations.length, s = allStations[0]; i < n; s = allStations[++i]) {
         if (s != null && distance(s.coords, coords) < radius) result.push(s);
