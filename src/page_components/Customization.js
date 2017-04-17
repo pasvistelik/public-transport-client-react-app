@@ -25,9 +25,9 @@ class Customization extends Component {
             <form action="#">
               <label>
                 Уровни значимости по критериям:
-                <label className="block_elem"><input type="range" min="0" max="1" step="0.05" value={this.props.totalTimePercentValue} onInput={this.handleTotalTimePercentValueChange}/>Минимум времени</label>
-                <label className="block_elem"><input type="range" min="0" max="1" step="0.05" value={this.props.totalGoingTimePercentValue} onInput={this.handleTotalGoingTimePercentValueChange}/>Минимум ходьбы</label>
-                <label className="block_elem"><input type="range" min="0" max="1" step="0.05" value={this.props.totalTransportChangingCountPercentValue} onInput={this.handleTotalTransportChangingCountPercentValueChange}/>Минимум пересадок</label>
+                <label className="block_elem"><input type="range" min="0" max="1" step="0.05" value={this.props.totalTimePercentValue} onChange={this.handleTotalTimePercentValueChange}/>Минимум времени</label>
+                <label className="block_elem"><input type="range" min="0" max="1" step="0.05" value={this.props.totalGoingTimePercentValue} onChange={this.handleTotalGoingTimePercentValueChange}/>Минимум ходьбы</label>
+                <label className="block_elem"><input type="range" min="0" max="1" step="0.05" value={this.props.totalTransportChangingCountPercentValue} onChange={this.handleTotalTransportChangingCountPercentValueChange}/>Минимум пересадок</label>
               </label>
             </form>
           </div>

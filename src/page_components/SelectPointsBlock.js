@@ -10,18 +10,38 @@ const SelectingPointStatus = {
 class SelectPointsBlock extends Component {
     constructor(props) {
         super(props);
-        this.state = {
-            startPointSearchInputValue: '',
-            finalPointSearchInputValue: '',
+        if (AppClient.startOptimalRoutePoint != null && AppClient.finalOptimalRoutePoint != null) {
+            this.state = {
+                startPointSearchInputValue: '',
+                finalPointSearchInputValue: '',
 
-            formBackgroundColor: '#ffffff',
+                formBackgroundColor: '#ffffff',
 
-            startPointStatusText: '',
-            finalPointStatusText: '',
+                startPointStatusText: '',
+                finalPointStatusText: '',
 
-            startPointStatus: SelectingPointStatus.inputing,
-            finalPointStatus: SelectingPointStatus.inputing,
-        };
+                startPointStatus: SelectingPointStatus.selected,
+                finalPointStatus: SelectingPointStatus.selected,
+            };
+            this.tryGoToAdvancedParamsAndButton();
+        }
+        else {
+            this.state = {
+                startPointSearchInputValue: '',
+                finalPointSearchInputValue: '',
+
+                formBackgroundColor: '#ffffff',
+
+                //startPointStatusText: '',
+                finalPointStatusText: '',
+
+                //startPointStatus: SelectingPointStatus.inputing,
+                finalPointStatus: SelectingPointStatus.inputing,
+
+                startPointStatusText: "определение текущего местоположения...",
+                startPointStatus: SelectingPointStatus.waiting
+            };
+        }
         this.updateStartPointSearchInputValue = this.updateStartPointSearchInputValue.bind(this);
         this.updateFinalPointSearchInputValue = this.updateFinalPointSearchInputValue.bind(this);
         this.findStartPoint = this.findStartPoint.bind(this);
@@ -45,10 +65,10 @@ class SelectPointsBlock extends Component {
     async trySetCurrentPositionAsStartPoint() {
         if(AppClient.myCurrentFindedPosition != null) return;
 
-        this.setState({
+        /*this.setState({
             startPointStatusText: "определение текущего местоположения...",
             startPointStatus: SelectingPointStatus.waiting
-        });
+        });*/
 
         AppClient.myCurrentFindedPosition = await AppClient.findCurrentDestinationCoords();
         if (AppClient.myCurrentFindedPosition != null) {

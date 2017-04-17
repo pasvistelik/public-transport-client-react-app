@@ -8,13 +8,13 @@ var apiPublicTransportServer = ApiConfig.apiPublicTransportServer;
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 class AppClient {
-    static isStartFinalPointsSelected() {
+    /*static isStartFinalPointsSelected() {
         return AppClient.startOptimalRoutePoint != null && AppClient.finalOptimalRoutePoint != null;
     }
     static countWayButtonClicked = false;
     static isCountWayButtonClicked() {
         return AppClient.countWayButtonClicked;
-    }
+    }*/
 
     static startOptimalRoutePoint = null;
     static finalOptimalRoutePoint = null;

@@ -59,7 +59,7 @@ class FindedWay extends Component {
         if (seconds < 10) secondsStr = "0" + secondsStr;
         my_text += " (" + hoursStr + ":" + minutesStr + ":" + secondsStr + ")";
 
-        stepsList.push(<li><span style={{cursor: 'pointer'}}>{my_text}</span></li>);
+        stepsList.push(<li key={i}><span style={{cursor: 'pointer'}}>{my_text}</span></li>);
     }
     
     
