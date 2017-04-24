@@ -6,7 +6,6 @@ class ConfirmParamsBlock extends Component {
     constructor(props) {
         super(props);
         this.state = {
-
             pointsSelected: false,
         };
         //this.countWay = this.countWay.bind(this);

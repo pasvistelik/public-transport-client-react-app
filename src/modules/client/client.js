@@ -142,25 +142,29 @@ class AppClient {
         return null;
     }
 
-    static async getDesinationDescription(coords) {
+    static async findPointsByOsmGeocodingApi(strReq) {
         try {
-            var data = await getJsonFromUrl("https://nominatim.openstreetmap.org/search?format=json&q=" + coords.lat + "," + coords.lng);
+            const data = await getJsonFromUrl("https://nominatim.openstreetmap.org/search?q=" + strReq + "&format=json");
             if (data != null && data.length !== 0) {
-                return data[0].display_name;
+                let resultPoints = [];
+                for (let i = 0, n = data.length, currentPoint = data[0]; i < n; currentPoint = data[++i]) {
+                    resultPoints.push({
+                        coords: { lat: parseFloat(currentPoint.lat), lng: parseFloat(currentPoint.lon)},
+                        description: currentPoint.display_name
+                    });
+                }
+                return resultPoints;
             }
             return null;
         } catch (e) {
             return null;
         }
     }
-
-    static async getPointCoordsFromOsmGeocodingApi(strReq) {
+    static async getDesinationDescription(coords) {
         try {
-            var data = await getJsonFromUrl("https://nominatim.openstreetmap.org/search?q=" + strReq + "&format=json");
-            if (data != null && data.length !== 0) {
-                var tmpPoint =  data[0];
-                var resultCoords = { lat: parseFloat(tmpPoint.lat), lng: parseFloat(tmpPoint.lon)};
-                return resultCoords;
+            const findedPoints = await AppClient.findPointsByOsmGeocodingApi(coords.lat + "," + coords.lng);
+            if (findedPoints != null) {
+                return findedPoints[0].description;
             }
             return null;
         } catch (e) {

@@ -10,14 +10,16 @@ const SelectingPointStatus = {
 class SelectPointsBlock extends Component {
     static lastSelectedStartPointDescription = '';
     static lastSelectedFinalPointDescription = '';
+    static lastInputedStartPointSearchValue = '';
+    static lastInputedFinalPointSearchValue = '';
     constructor(props) {
         super(props);
         if (AppClient.startOptimalRoutePoint != null && AppClient.finalOptimalRoutePoint != null) {
             this.state = {
-                startPointSearchInputValue: '',
-                finalPointSearchInputValue: '',
+                startPointSearchInputValue: SelectPointsBlock.lastInputedStartPointSearchValue,
+                finalPointSearchInputValue: SelectPointsBlock.lastInputedFinalPointSearchValue,
 
-                formBackgroundColor: '#ffffff',
+                formBackgroundColor: "#baff91",
 
                 startPointStatusText: SelectPointsBlock.lastSelectedStartPointDescription,
                 finalPointStatusText: SelectPointsBlock.lastSelectedFinalPointDescription,
@@ -25,12 +27,13 @@ class SelectPointsBlock extends Component {
                 startPointStatus: SelectingPointStatus.selected,
                 finalPointStatus: SelectingPointStatus.selected,
             };
-            this.tryGoToAdvancedParamsAndButton();
+            //this.tryGoToAdvancedParamsAndButton();
+            this.props.onSelected();
         }
         else {
             this.state = {
-                startPointSearchInputValue: '',
-                finalPointSearchInputValue: '',
+                startPointSearchInputValue: SelectPointsBlock.lastInputedStartPointSearchValue,
+                finalPointSearchInputValue: SelectPointsBlock.lastInputedFinalPointSearchValue,
 
                 formBackgroundColor: '#ffffff',
 
@@ -55,13 +58,15 @@ class SelectPointsBlock extends Component {
         this.trySetCurrentPositionAsStartPoint();
     }
     updateStartPointSearchInputValue(evt) {
+        SelectPointsBlock.lastInputedStartPointSearchValue = evt.target.value;
         this.setState({
-            startPointSearchInputValue: evt.target.value
+            startPointSearchInputValue: SelectPointsBlock.lastInputedStartPointSearchValue
         });
     }
     updateFinalPointSearchInputValue(evt) {
+        SelectPointsBlock.lastInputedFinalPointSearchValue = evt.target.value;
         this.setState({
-            finalPointSearchInputValue: evt.target.value
+            finalPointSearchInputValue: SelectPointsBlock.lastInputedFinalPointSearchValue
         });
     }
     async trySetCurrentPositionAsStartPoint() {
@@ -84,13 +89,12 @@ class SelectPointsBlock extends Component {
         }
     }
     async findStartPoint() {
-        var tmp = this.state.startPointSearchInputValue;
-        var strReq = tmp.toString();
-        var resultPoint = await AppClient.getPointCoordsFromOsmGeocodingApi(strReq);
+        const searchQueryStr = this.state.startPointSearchInputValue.toString();
+        const findedPoints = await AppClient.findPointsByOsmGeocodingApi(searchQueryStr);
         
-        if (resultPoint != null) {
-            this.setStartOptimalRoutePoint(resultPoint, strReq);
-            SelectPointsBlock.lastSelectedStartPointDescription = strReq;
+        if (findedPoints != null) {
+            const firstFindedPoint = findedPoints[0];
+            this.setStartOptimalRoutePoint(firstFindedPoint.coords, firstFindedPoint.description);
         }
         else {
             AppClient.startOptimalRoutePoint = null;
@@ -99,13 +103,12 @@ class SelectPointsBlock extends Component {
         }
     }
     async findFinalPoint() {
-        var tmp = this.state.finalPointSearchInputValue;
-        var strReq = tmp.toString();
-        var resultPoint = await AppClient.getPointCoordsFromOsmGeocodingApi(strReq);
+        const searchQueryStr = this.state.finalPointSearchInputValue.toString();
+        const findedPoints = await AppClient.findPointsByOsmGeocodingApi(searchQueryStr);
         
-        if (resultPoint != null) {
-            this.setFinalOptimalRoutePoint(resultPoint, strReq);
-            SelectPointsBlock.lastSelectedFinalPointDescription = strReq;
+        if (findedPoints != null) {
+            const firstFindedPoint = findedPoints[0];
+            this.setFinalOptimalRoutePoint(firstFindedPoint.coords, firstFindedPoint.description);
         }
         else {
             AppClient.finalOptimalRoutePoint = null;
@@ -127,6 +130,7 @@ class SelectPointsBlock extends Component {
         if (currentLatLng != null) {
             AppClient.startOptimalRoutePoint = currentLatLng;
             if (strReq !== undefined) {
+                SelectPointsBlock.lastSelectedStartPointDescription = strReq;
                 this.setState({
                     startPointStatusText: strReq,
                     startPointStatus: SelectingPointStatus.selected
@@ -139,6 +143,7 @@ class SelectPointsBlock extends Component {
         if (currentLatLng != null) {
             AppClient.finalOptimalRoutePoint = currentLatLng;
             if (strReq !== undefined) {
+                SelectPointsBlock.lastSelectedFinalPointDescription = strReq;
                 this.setState({
                     finalPointStatusText: strReq,
                     finalPointStatus: SelectingPointStatus.selected
