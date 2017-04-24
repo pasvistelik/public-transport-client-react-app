@@ -31,17 +31,15 @@ var loadingStarted = false;
 var allStationsLoaded = false, allRoutesLoaded = false,  allTimetablesLoaded = false;
 var allStationsJSON = null, allRoutesJSON = null, allTimetablesJSON = null;
 
-async function loadData() {
-    if(!loadingStarted){
-        loadingStarted = true;
-        
+async function loadDataOnly() {
+    if(!allStationsLoaded){
         if (localStorage["allStationsJSON"] === undefined || localStorage["allStationsJSON"] == null) {
             console.log("Downloading stations from server...");
             var strGetStations = apiPublicTransportServer + "stations/";
 
-            const response = await fetch(strGetStations);
+            let response = await fetch(strGetStations);
             allStationsJSON = await response.text();
-            allStations = await response.json();
+            allStations = JSON.parse(allStationsJSON);//await response.json();
 
             if (allStations !== undefined && allStations != null) localStorage["allStationsJSON"] = allStationsJSON;
             allStationsLoaded = true;
@@ -52,14 +50,16 @@ async function loadData() {
             allStationsLoaded = true;
             console.log("Stations loaded from localStorage.");
         }
+    }
 
+    if(!allRoutesLoaded){
         if (localStorage["allRoutesJSON"] === undefined || localStorage["allRoutesJSON"] == null) {
             console.log("Downloading routes from server...");
             var strGetRoutes = apiPublicTransportServer + "routes/";
 
-            const response = await fetch(strGetRoutes);
+            let response = await fetch(strGetRoutes);
             allRoutesJSON = await response.text();
-            allRoutes = await response.json();
+            allRoutes = JSON.parse(allRoutesJSON);//await response.json();
 
             if (allRoutes !== undefined && allRoutes != null) localStorage["allRoutesJSON"] = allRoutesJSON;
             allRoutesLoaded = true;
@@ -70,14 +70,16 @@ async function loadData() {
             allRoutesLoaded = true;
             console.log("Routes loaded from localStorage.");
         }
+    }
 
+    if(!allTimetablesLoaded){
         if (localStorage["allTimetablesJSON"] === undefined || localStorage["allTimetablesJSON"] == null) {
             console.log("Downloading timetables from server...");
             var strGetTimetables = apiPublicTransportServer + "timetables/";
 
-            const response = await fetch(strGetTimetables);
+            let response = await fetch(strGetTimetables);
             allTimetablesJSON = await response.text();
-            allTimetables = await response.json();
+            allTimetables = JSON.parse(allTimetablesJSON);//await response.json();
 
             if (allTimetables !== undefined && allTimetables != null) localStorage["allTimetablesJSON"] = allTimetablesJSON;
             allTimetablesLoaded = true;
@@ -88,7 +90,14 @@ async function loadData() {
             allTimetablesLoaded = true;
             console.log("Timetables loaded from localStorage.");
         }
+    }
+}
 
+async function loadData() {
+    if(!loadingStarted){
+        loadingStarted = true;
+
+        await loadDataOnly();
 
         if (allStationsLoaded && allRoutesLoaded && allTimetablesLoaded) {
             initialize(allStations, allRoutes, allTimetables);
@@ -120,6 +129,9 @@ class MyDatabase {
     }
     static async loadDataAndInitialize() {
         await loadData();
+    }
+    static async loadDataOnly() {
+        await loadDataOnly();
     }
 }
 

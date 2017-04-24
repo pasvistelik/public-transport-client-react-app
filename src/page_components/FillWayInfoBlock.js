@@ -7,9 +7,9 @@ class FillWayInfoBlock extends Component {
 
         let tmpMyDate = new Date();
         let hoursStr = tmpMyDate.getHours().toString();
-        if (hoursStr.length == 1) hoursStr = "0" + hoursStr;
+        if (hoursStr.length === 1) hoursStr = "0" + hoursStr;
         let minutesStr = tmpMyDate.getMinutes().toString();
-        if (minutesStr.length == 1) minutesStr = "0" + minutesStr;
+        if (minutesStr.length === 1) minutesStr = "0" + minutesStr;
         let tmpTime = hoursStr + ":" + minutesStr;
 
         this.state = {
@@ -98,7 +98,7 @@ class FillWayInfoBlock extends Component {
 
         let fromPositionStr = AppClient.startOptimalRoutePoint.lat + "," + AppClient.startOptimalRoutePoint.lng;
         let toPositionStr = AppClient.finalOptimalRoutePoint.lat + "," + AppClient.finalOptimalRoutePoint.lng;
-        let typesStr = (selectedTypes == null || selectedTypes.length == 0) ? null : selectedTypes[0];
+        let typesStr = (selectedTypes == null || selectedTypes.length === 0) ? null : selectedTypes[0];
         for (var i = 1, n = selectedTypes.length; i < n; i++) typesStr += "," + selectedTypes[i];
 
         this.props.onConfirmed(fromPositionStr, toPositionStr, myStartTimeStr, this.state.selectedReservedTime, this.state.selectedGoingSpeed, typesStr);

@@ -34,15 +34,15 @@
         this.isVisited = true;
     }
     toString() {
-        var from, to, tr, p;
-        if (this.fromWhichStation != null) from = this.fromWhichStation.name;
-        else from = "null";
+        var to, tr; //, from, p;
+        //if (this.fromWhichStation != null) from = this.fromWhichStation.name;
+        //else from = "null";
         if (this.station != null) to = this.station.name;
         else to = "null";
         if (this.fromWhichRoute != null) tr = this.fromWhichRoute.type + " " + this.fromWhichRoute.number + " " + this.fromWhichRoute.from + " - " + this.fromWhichRoute.to;
         else tr = "пешком";
-        if (this.previousPoint != null) p = this.previousPoint.toString();
-        else p = "null";
+        //if (this.previousPoint != null) p = this.previousPoint.toString();
+        //else p = "null";
         return /*p+" -->> */"(" + this.totalTimeSeconds + ") " + to + " (" + tr + ")"; // from " + from + " to
     }
     getTotalGoingTime() {

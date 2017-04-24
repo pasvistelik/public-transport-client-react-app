@@ -3,6 +3,15 @@ import MyDatabase from './../loadData';
 import ApiConfig from './../apiConfig';
 var apiPublicTransportServer = ApiConfig.apiPublicTransportServer;
 
+//import './install-service-worker.js';
+
+if (navigator.onLine === undefined || navigator.onLine === false){
+    MyDatabase.loadDataAndInitialize();
+}
+else {
+    MyDatabase.loadDataOnly();
+}
+
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Client.
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -46,13 +55,13 @@ class AppClient {
         } catch (e) { // Иначе выполняем все расчеты на клиенте.
             findedOptimalWays = await getCountedOnClientWays(fromPositionStr, toPositionStr, myStartTimeStr, my_dopTimeMinutes, my_speed, typesStr);
         } finally{
-            if (findedOptimalWays != null && findedOptimalWays.length != 0) {
+            if (findedOptimalWays != null && findedOptimalWays.length !== 0) {
                 AppClient.findedOptimalWays = findedOptimalWays;
 
                 AppClient.minimalTimeSeconds = parseFloat(AppClient.findedOptimalWays[0].totalTimeSeconds);
                 AppClient.minimalGoingTimeSeconds = parseFloat(AppClient.findedOptimalWays[0].totalGoingTimeSeconds);
                 AppClient.minimalTransportChangingCount = parseFloat(AppClient.findedOptimalWays[0].totalTransportChangingCount);
-                for (var i = 1; i < AppClient.findedOptimalWays.length; i++) {
+                for (let i = 1; i < AppClient.findedOptimalWays.length; i++) {
                     if (parseFloat(AppClient.findedOptimalWays[i].totalTimeSeconds) < AppClient.minimalTimeSeconds) AppClient.minimalTimeSeconds = parseFloat(AppClient.findedOptimalWays[i].totalTimeSeconds);
                     if (parseFloat(AppClient.findedOptimalWays[i].totalGoingTimeSeconds) < AppClient.minimalGoingTimeSeconds) AppClient.minimalGoingTimeSeconds = parseFloat(AppClient.findedOptimalWays[i].totalGoingTimeSeconds);
                     if (parseFloat(AppClient.findedOptimalWays[i].totalTransportChangingCount) < AppClient.minimalTransportChangingCount) AppClient.minimalTransportChangingCount = parseFloat(AppClient.findedOptimalWays[i].totalTransportChangingCount);
@@ -76,12 +85,12 @@ class AppClient {
             let tmpTransportChangingCountEffictivity = 0;
             let max_rank = 0;
             let index = -1;
-            for (var j = 0; j < AppClient.findedOptimalWays.length/* && j < 3*/; j++) {
+            for (let j = 0; j < AppClient.findedOptimalWays.length/* && j < 3*/; j++) {
                 max_rank = 0;//!!!
                 index = -1;
-                for (var i = 0; i < AppClient.findedOptimalWays.length; i++) {
-                    if (sortedArr.indexOf(i) == -1) {
-                        tmpTransportChangingCountEffictivity = parseFloat(AppClient.findedOptimalWays[i].totalTransportChangingCount) == 0 ? 1 : (AppClient.minimalTransportChangingCount / parseFloat(AppClient.findedOptimalWays[i].totalTransportChangingCount));
+                for (let i = 0; i < AppClient.findedOptimalWays.length; i++) {
+                    if (sortedArr.indexOf(i) === -1) {
+                        tmpTransportChangingCountEffictivity = parseFloat(AppClient.findedOptimalWays[i].totalTransportChangingCount) === 0 ? 1 : (AppClient.minimalTransportChangingCount / parseFloat(AppClient.findedOptimalWays[i].totalTransportChangingCount));
                         var tmp_rank = AppClient.minimalTimeSeconds / parseFloat(AppClient.findedOptimalWays[i].totalTimeSeconds) * totalTimePercentValue + AppClient.minimalGoingTimeSeconds / parseFloat(AppClient.findedOptimalWays[i].totalGoingTimeSeconds) * totalGoingTimePercentValue + tmpTransportChangingCountEffictivity * totalTransportChangingCountPercentValue;
                         if (tmp_rank >= max_rank) {
                             max_rank = tmp_rank;
@@ -89,11 +98,11 @@ class AppClient {
                         }
                     }
                 }
-                if (index != -1) {
+                if (index !== -1) {
                     sortedArr.push(index);
                 }
             }
-            for (var i = 0, n = sortedArr.length, sortedIndex = sortedArr[0]; i < n; sortedIndex = sortedArr[++i]) {
+            for (let i = 0, n = sortedArr.length, sortedIndex = sortedArr[0]; i < n; sortedIndex = sortedArr[++i]) {
                 newSortedFindedWays.push(AppClient.findedOptimalWays[sortedIndex]);
             }
             AppClient.findedOptimalWays = newSortedFindedWays;
@@ -136,7 +145,7 @@ class AppClient {
     static async getDesinationDescription(coords) {
         try {
             var data = await getJsonFromUrl("https://nominatim.openstreetmap.org/search?format=json&q=" + coords.lat + "," + coords.lng);
-            if (data != null && data.length != 0) {
+            if (data != null && data.length !== 0) {
                 return data[0].display_name;
             }
             return null;
@@ -148,7 +157,7 @@ class AppClient {
     static async getPointCoordsFromOsmGeocodingApi(strReq) {
         try {
             var data = await getJsonFromUrl("https://nominatim.openstreetmap.org/search?q=" + strReq + "&format=json");
-            if (data != null && data.length != 0) {
+            if (data != null && data.length !== 0) {
                 var tmpPoint =  data[0];
                 var resultCoords = { lat: parseFloat(tmpPoint.lat), lng: parseFloat(tmpPoint.lon)};
                 return resultCoords;
@@ -172,8 +181,8 @@ function strToCoords(str) {
 function strToSeconds(str) {
     if (str === undefined || str == null) return undefined;
     var tmp = str.split(':');
-    var hours = parseInt(tmp[0]);
-    var minutes = parseInt(tmp[1]);
+    var hours = parseInt(tmp[0], 10);
+    var minutes = parseInt(tmp[1], 10);
     if (hours >= 0 && hours < 24 && minutes >= 0 && minutes < 60) return 3600 * hours + 60 * minutes;
     else return undefined;
 }

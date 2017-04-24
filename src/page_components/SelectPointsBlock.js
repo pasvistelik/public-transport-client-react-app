@@ -8,6 +8,8 @@ const SelectingPointStatus = {
 };
 
 class SelectPointsBlock extends Component {
+    static lastSelectedStartPointDescription = '';
+    static lastSelectedFinalPointDescription = '';
     constructor(props) {
         super(props);
         if (AppClient.startOptimalRoutePoint != null && AppClient.finalOptimalRoutePoint != null) {
@@ -17,8 +19,8 @@ class SelectPointsBlock extends Component {
 
                 formBackgroundColor: '#ffffff',
 
-                startPointStatusText: '',
-                finalPointStatusText: '',
+                startPointStatusText: SelectPointsBlock.lastSelectedStartPointDescription,
+                finalPointStatusText: SelectPointsBlock.lastSelectedFinalPointDescription,
 
                 startPointStatus: SelectingPointStatus.selected,
                 finalPointStatus: SelectingPointStatus.selected,
@@ -88,6 +90,7 @@ class SelectPointsBlock extends Component {
         
         if (resultPoint != null) {
             this.setStartOptimalRoutePoint(resultPoint, strReq);
+            SelectPointsBlock.lastSelectedStartPointDescription = strReq;
         }
         else {
             AppClient.startOptimalRoutePoint = null;
@@ -102,6 +105,7 @@ class SelectPointsBlock extends Component {
         
         if (resultPoint != null) {
             this.setFinalOptimalRoutePoint(resultPoint, strReq);
+            SelectPointsBlock.lastSelectedFinalPointDescription = strReq;
         }
         else {
             AppClient.finalOptimalRoutePoint = null;
@@ -155,7 +159,7 @@ class SelectPointsBlock extends Component {
 
     render() {
         let startPointBlock = 'Error...';
-        if (this.state.startPointStatus === SelectingPointStatus.selected) {
+        if (this.state.startPointStatus === SelectingPointStatus.selected || this.state.startPointStatus === SelectingPointStatus.waiting) {
             startPointBlock = (
                 <label>
                     <span>Начальная точка: </span>

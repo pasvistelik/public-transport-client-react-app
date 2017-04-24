@@ -1,7 +1,7 @@
 ﻿import Points from './points';
 import GeoCoords from './geoCoords';
 var distance = GeoCoords.distance;
-import IgnoringFragments from './ignoringFragments';
+//import IgnoringFragments from './ignoringFragments';
 
 //import {getAllStations, getAllRoutes, getAllTimetables, getAllStationsJSON, getAllRoutesJSON, getAllTimetablesJSON, loadData} from './loadData';
 import MyDatabase from './loadData';
@@ -10,7 +10,7 @@ var allStations = null;
 
 function getStationsAround(coords, radius) {
     if(allStations == null) allStations = MyDatabase.getAllStations();
-    var result = new Array();
+    var result = [];
     for (var i = 0, n = allStations.length, s = allStations[0]; i < n; s = allStations[++i]) {
         if (s != null && distance(s.coords, coords) < radius) result.push(s);
     }
@@ -19,10 +19,10 @@ function getStationsAround(coords, radius) {
 
 class OptimalRoute {
     constructor(nowPos, needPos, time, types, goingSpeed, dopTimeMinutes, ignoringRoutesAdd, ignoringList) {
-        if (ignoringRoutesAdd != undefined && ignoringRoutesAdd != null) this.ignoringRoutes = ignoringRoutesAdd;
-        else this.ignoringRoutes = new Array();
+        if (ignoringRoutesAdd != null) this.ignoringRoutes = ignoringRoutesAdd;
+        else this.ignoringRoutes = [];
 
-        this.points = new Array();
+        this.points = [];
 
         this.needPos = needPos;
         this.nowPos = nowPos;
@@ -49,7 +49,7 @@ class OptimalRoute {
         while (tmpP.previousPoint != null) {
             tmpP = tmpP.previousPoint;//
             this.points.push(tmpP.toString());
-            if (tmpP.previousPoint == null && tmpP.coords != myPoints.startPoint.coords)
+            if (tmpP.previousPoint == null && tmpP.coords !== myPoints.startPoint.coords)
                 throw new Error("Где-то удалилась часть маршрута...");
         }
 

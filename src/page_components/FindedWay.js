@@ -7,7 +7,7 @@ class FindedWay extends Component {
 
     const tmpTotalTimeSecondsEffictivity = (AppClient.minimalTimeSeconds / parseFloat(currentWay.totalTimeSeconds) * 100).toFixed(0);
     const tmpTotalGoingTimeSecondsEffictivity = (AppClient.minimalGoingTimeSeconds / parseFloat(currentWay.totalGoingTimeSeconds) * 100).toFixed(0);
-    const tmpTransportChangingCountEffictivity = (parseFloat(currentWay.totalTransportChangingCount) == 0 ? 100 : (AppClient.minimalTransportChangingCount / parseFloat(currentWay.totalTransportChangingCount)) * 100).toFixed(0);
+    const tmpTransportChangingCountEffictivity = (parseFloat(currentWay.totalTransportChangingCount) === 0 ? 100 : (AppClient.minimalTransportChangingCount / parseFloat(currentWay.totalTransportChangingCount)) * 100).toFixed(0);
 
     let p1ClassName;
     if (tmpTotalTimeSecondsEffictivity > 85) p1ClassName = "effectivityPercentGold";
@@ -29,21 +29,30 @@ class FindedWay extends Component {
     var p3 = (<span className={p3ClassName} title="TransportChangingCountEffictivity">{tmpTransportChangingCountEffictivity.toString()}%</span>);
 
     let stepsList = [];
-    for (var i = 1; i < currentWay.points.length; i++) {
+    for (var i = 1, stationsCounter = 1; i < currentWay.points.length; i++) {
         var my_text = "";
         if (currentWay.points[i].route == null) {
+            stationsCounter = 1;
             if (currentWay.points[i].station == null) my_text = "Идите пешком к пункту назначения.";
             else {
                 my_text = "Идите к остановке \"";
-                if (currentWay.points[i].station.name.toString() != "") my_text += currentWay.points[i].station.name.toString();
+                if (currentWay.points[i].station.name.toString() !== "") my_text += currentWay.points[i].station.name.toString();
                 else my_text += currentWay.points[i].station.name.toString();
                 my_text += "\"";
             }
         }
         else {
-            if (i + 1 < currentWay.points.length && currentWay.points[i + 1].route != null && currentWay.points[i].route.type == currentWay.points[i + 1].route.type && currentWay.points[i].route.number == currentWay.points[i + 1].route.number) continue;
-            my_text = "Доедьте до остановки \"";
-            if (currentWay.points[i].station.name.toString() != "") my_text += currentWay.points[i].station.name.toString();
+            if (i + 1 < currentWay.points.length && currentWay.points[i + 1].route != null && currentWay.points[i].route.type === currentWay.points[i + 1].route.type && currentWay.points[i].route.number === currentWay.points[i + 1].route.number) {
+                stationsCounter++;
+                continue;
+            }
+            let tmpText;
+            if (stationsCounter%10 > 4 || stationsCounter%10 === 0 || (stationsCounter > 10 && stationsCounter <= 14)) tmpText = "остановок";
+            else if(stationsCounter%10 === 1) tmpText = "остановку";
+            else if(stationsCounter%10 > 1 && stationsCounter%10 < 5) tmpText = "остановки";
+            else tmpText = "остановок";
+            my_text = "Проедьте "+stationsCounter+" "+tmpText+" до \"";
+            if (currentWay.points[i].station.name.toString() !== "") my_text += currentWay.points[i].station.name.toString();
             else my_text += currentWay.points[i].station.name.toString();
             my_text += "\" на транспорте \"" + currentWay.points[i].route.type.toString() + " " + currentWay.points[i].route.number.toString() + "\"";
         }

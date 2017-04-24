@@ -13,11 +13,11 @@
             zz = yy;
             return 1 - (yy) / 2 + (zz *= yy) / 24;
         }
-        function taylorAtan(x) {
+        /*function taylorAtan(x) {
             yy = x * x;
             zz = x;
             return zz - (zz *= yy) / 3 + (zz *= yy) / 5 - (zz *= yy) / 7 + (zz *= yy) / 9 - (zz *= yy) / 20;
-        }
+        }*/
 
         // перевести координаты в радианы
         var lat1 = a.lat * pi180;
