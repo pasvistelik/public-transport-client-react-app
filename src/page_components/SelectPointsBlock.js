@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import AppClient from './../modules/client/client';
+//import PointsHistoryStorage from './../modules/client/pointsHistoryStorage';
+import PointsHistoryBlock from './PointsHistoryBlock';
 
 const SelectingPointStatus = {
     inputing: 0,
@@ -54,6 +56,8 @@ class SelectPointsBlock extends Component {
         this.changeEditStartPointEnabledStatus = this.changeEditStartPointEnabledStatus.bind(this);
         this.changeEditFinalPointEnabledStatus = this.changeEditFinalPointEnabledStatus.bind(this);
         this.trySetCurrentPositionAsStartPoint = this.trySetCurrentPositionAsStartPoint.bind(this);
+        this.setStartOptimalRoutePoint = this.setStartOptimalRoutePoint.bind(this);
+        this.setFinalOptimalRoutePoint = this.setFinalOptimalRoutePoint.bind(this);
 
         this.trySetCurrentPositionAsStartPoint();
     }
@@ -162,7 +166,10 @@ class SelectPointsBlock extends Component {
     }
 
 
+
     render() {
+        //const pointsHistory = await PointsHistoryStorage.getAllPoints();
+        //console.log(pointsHistory);
         let startPointBlock = 'Error...';
         if (this.state.startPointStatus === SelectingPointStatus.selected || this.state.startPointStatus === SelectingPointStatus.waiting) {
             startPointBlock = (
@@ -174,19 +181,29 @@ class SelectPointsBlock extends Component {
             );
         }
         else if (this.state.startPointStatus === SelectingPointStatus.inputing) {
+            let buttonSearch = '', inputSearch = '';
+            if (!('onLine' in navigator) || navigator.onLine === true) {
+                buttonSearch = (
+                    <input name="startPointSearchButton" type="button" value="Найти" onClick={this.findStartPoint}/>
+                );
+                inputSearch = (
+                    <input 
+                        name="startPointSearch" 
+                        value={this.state.startPointSearchInputValue} 
+                        onChange={this.updateStartPointSearchInputValue} 
+                        type="text"
+                    />
+                );
+            }
             startPointBlock = (
                 <div className="inForm">
                     <label>
                         <span>Начальная точка: </span>
                         <span id="startPointStatusText">{this.state.startPointStatusText}</span>
-                        <input 
-                            name="startPointSearch" 
-                            value={this.state.startPointSearchInputValue} 
-                            onChange={this.updateStartPointSearchInputValue} 
-                            type="text"
-                        />
+                        {inputSearch}
                     </label>
-                    <input name="startPointSearchButton" type="button" value="Найти" onClick={this.findStartPoint}/>
+                    {buttonSearch}
+                    <PointsHistoryBlock setPointHandler={this.setStartOptimalRoutePoint}/>
                 </div>
             );
         }
@@ -209,19 +226,29 @@ class SelectPointsBlock extends Component {
             );
         }
         else if (this.state.finalPointStatus === SelectingPointStatus.inputing) {
+            let buttonSearch = '', inputSearch = '';
+            if (!('onLine' in navigator) || navigator.onLine === true) {
+                buttonSearch = (
+                    <input name="finalPointSearchButton" type="button" value="Найти" onClick={this.findFinalPoint}/>
+                );
+                inputSearch = (
+                    <input 
+                        name="finalPointSearch" 
+                        value={this.state.finalPointSearchInputValue} 
+                        onChange={this.updateFinalPointSearchInputValue} 
+                        type="text"
+                    />
+                );
+            }
             finalPointBlock = (
                 <div className="inForm">
                     <label>
                         <span>Конечная точка: </span>
                         <span id="finalPointStatusText">{this.state.finalPointStatusText}</span>
-                        <input 
-                            name="finalPointSearch" 
-                            value={this.state.finalPointSearchInputValue} 
-                            onChange={this.updateFinalPointSearchInputValue} 
-                            type="text"
-                        />
+                        {inputSearch}
                     </label>
-                    <input name="finalPointSearchButton" type="button" value="Найти" onClick={this.findFinalPoint}/>
+                    {buttonSearch}
+                    <PointsHistoryBlock setPointHandler={this.setFinalOptimalRoutePoint}/>
                 </div>
             );
         }

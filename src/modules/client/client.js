@@ -2,6 +2,7 @@
 import MyDatabase from './../loadData';
 import ApiConfig from './../apiConfig';
 var apiPublicTransportServer = ApiConfig.apiPublicTransportServer;
+import PointsHistoryStorage from './pointsHistoryStorage';
 
 //import './install-service-worker.js';
 
@@ -131,8 +132,17 @@ class AppClient {
 
             localStorage["lastCnownPositionCoords"] = findedLat + "," + findedLng;
 
-            var lastCnownPositionCoordsDescription = await AppClient.getDesinationDescription({lat: findedLat, lng: findedLng});
-            if (lastCnownPositionCoordsDescription == null) lastCnownPositionCoordsDescription = "[" + findedLat + ", " + findedLng + "]";
+            let coords = {lat: findedLat, lng: findedLng};
+            var lastCnownPositionCoordsDescription = await AppClient.getDesinationDescription(coords);
+            if (lastCnownPositionCoordsDescription == null) {
+                let searchingPoint = await PointsHistoryStorage.tryFindByCoords(coords);
+                if (searchingPoint != null) {
+                    lastCnownPositionCoordsDescription = searchingPoint.description;
+                }
+                else {
+                    lastCnownPositionCoordsDescription = "[" + findedLat + ", " + findedLng + "]";
+                }
+            }
             localStorage["lastCnownPositionCoordsDescription"] = lastCnownPositionCoordsDescription;
 
             var resultCoords = { lat: findedLat, lng: findedLng };
@@ -153,6 +163,7 @@ class AppClient {
                         description: currentPoint.display_name
                     });
                 }
+                PointsHistoryStorage.tryPush(resultPoints[0]);
                 return resultPoints;
             }
             return null;
