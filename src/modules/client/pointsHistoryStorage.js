@@ -54,7 +54,7 @@ async function getAllPoints() {
 async function tryFindByCoords(coords) {
     const pointsHistory = await getAllPoints();
     let candidate = null;
-    for (let i = 0, n = pointsHistory.length, currentPoint = pointsHistory[0], findedDistance = 100; i < n; currentPoint = pointsHistory[++i]) {
+    for (let i = 0, n = pointsHistory.length, currentPoint = pointsHistory[0], findedDistance = 150; i < n; currentPoint = pointsHistory[++i]) {
         const currentDistance = GeoCoords.distance(coords, {lat: currentPoint.lat, lng: currentPoint.lng});
         if (currentDistance < findedDistance) {
             findedDistance = currentDistance;
