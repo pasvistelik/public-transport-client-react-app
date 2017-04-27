@@ -1,19 +1,9 @@
 {
-  "name": "my-app-test",
-  "version": "0.1.0",
-  "babel": {
-    "presets": [
-      "react"
-    ],
-    "plugins": [
-      "array-includes"
-    ]
-  },
-  "private": true,
+  "name": "js_client",
+  "version": "1.0.0",
   "dependencies": {
-    "jquery": "^3.2.1",
-    "react": "^15.4.2",
-    "react-dom": "^15.4.2"
+    "react": "^15.5.4",
+    "react-dom": "^15.5.4"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
@@ -27,7 +17,8 @@
     "babel-preset-react": "^6.24.1",
     "offline-plugin": "^4.7.0",
     "react-scripts": "0.9.5",
-    "serviceworker-loader": "^0.1.0"
+    "serviceworker-loader": "^0.1.0",
+    "serviceworker-webpack-plugin": "^0.2.1"
   },
   "scripts": {
     "start": "react-scripts start",
