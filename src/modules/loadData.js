@@ -1,7 +1,7 @@
 ﻿//var fetch = require('node-fetch');
 import initialize from './initialize';
 
-import ApiConfig from './apiConfig';
+import ApiConfig from './config/apiConfig';
 var apiPublicTransportServer = ApiConfig.apiPublicTransportServer;
 
 /*var strGetStations = apiPublicTransportServer + "stations/";

@@ -1,4 +1,4 @@
-﻿import GeoCoords from './../geoCoords';
+﻿import GeoCoords from './../coords/geoCoords';
 
 const dbName = "public_transport";
 const storeName = "points_history";

@@ -1,6 +1,6 @@
-﻿import OptimalRoutesCollection from './../optimalRoutesCollection';
+﻿import OptimalRoutesCollection from './../find-optimal-ways/optimalRoutesCollection';
 import MyDatabase from './../loadData';
-import ApiConfig from './../apiConfig';
+import ApiConfig from './../config/apiConfig';
 var apiPublicTransportServer = ApiConfig.apiPublicTransportServer;
 import PointsHistoryStorage from './pointsHistoryStorage';
 

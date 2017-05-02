@@ -1,10 +1,10 @@
 ﻿import Points from './points';
-import GeoCoords from './geoCoords';
+import GeoCoords from './../coords/geoCoords';
 var distance = GeoCoords.distance;
 //import IgnoringFragments from './ignoringFragments';
 
 //import {getAllStations, getAllRoutes, getAllTimetables, getAllStationsJSON, getAllRoutesJSON, getAllTimetablesJSON, loadData} from './loadData';
-import MyDatabase from './loadData';
+import MyDatabase from './../loadData';
 
 var allStations = null;
 

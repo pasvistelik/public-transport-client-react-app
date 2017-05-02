@@ -1,5 +1,5 @@
 ﻿import Point from './point';
-import GeoCoords from './geoCoords';
+import GeoCoords from './../coords/geoCoords';
 var distance = GeoCoords.distance;
 
 
