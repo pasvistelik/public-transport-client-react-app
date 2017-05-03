@@ -1,24 +1,8 @@
 ﻿import Points from './points';
-import GeoCoords from './../coords/geoCoords';
-var distance = GeoCoords.distance;
 //import IgnoringFragments from './ignoringFragments';
 
-//import {getAllStations, getAllRoutes, getAllTimetables, getAllStationsJSON, getAllRoutesJSON, getAllTimetablesJSON, loadData} from './loadData';
-import MyDatabase from './../loadData';
-
-var allStations = null;
-
-function getStationsAround(coords, radius) {
-    if(allStations == null) allStations = MyDatabase.getAllStations();
-    var result = [];
-    for (var i = 0, n = allStations.length, s = allStations[0]; i < n; s = allStations[++i]) {
-        if (s != null && distance(s.coords, coords) < radius) result.push(s);
-    }
-    return result;
-}
-
 class OptimalRoute {
-    constructor(nowPos, needPos, time, types, goingSpeed, dopTimeMinutes, ignoringRoutesAdd, ignoringList) {
+    constructor(stationsList, nowPos, needPos, time, types, goingSpeed, dopTimeMinutes, ignoringRoutesAdd, ignoringList) {
         if (ignoringRoutesAdd != null) this.ignoringRoutes = ignoringRoutesAdd;
         else this.ignoringRoutes = [];
 
@@ -37,8 +21,7 @@ class OptimalRoute {
         //else this.myIgnoringFragments = new IgnoringFragments();
 
         var myPoints = new Points(nowPos, needPos);
-        // Получим "начальный" список станций:
-        var stationsList = getStationsAround(myPoints.startPoint.coords, distance(myPoints.startPoint.coords, myPoints.finalPoint.coords));
+        
         myPoints.fillStartData(stationsList, goingSpeed, reservedTimeSeconds, this.myIgnoringFragments);
 
         // Находим кратчайшие пути до всех вершин:

@@ -234,7 +234,7 @@ async function getCountedOnClientWays(fromPositionStr, toPositionStr, myStartTim
     if (types === undefined || types == null) types = ["bus", "trolleybus"];
 
     var startInitializingMoment = Date.now();
-    var res = new OptimalRoutesCollection(startOptimalRoutePoint, finalOptimalRoutePoint, myStartTime, types, parseFloat(my_speed), parseFloat(my_dopTimeMinutes));
+    var res = new OptimalRoutesCollection(MyDatabase.getAllStations(), startOptimalRoutePoint, finalOptimalRoutePoint, myStartTime, types, parseFloat(my_speed), parseFloat(my_dopTimeMinutes));
     AppClient.findedOptimalWays = res.getOptimalWays();
     
     console.log("Finded " + AppClient.findedOptimalWays.length + " optimal routes. Time = " + (Date.now() - startInitializingMoment) + " ms.");

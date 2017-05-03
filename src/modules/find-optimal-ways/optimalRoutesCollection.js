@@ -1,6 +1,17 @@
 ﻿//import IgnoringFragments from './ignoringFragments';
 import OptimalRoute from './optimalRoute';
 import OptimalWay from './optimalWay';
+import Points from './points';
+
+import GeoCoords from './../coords/geoCoords';
+var distance = GeoCoords.distance;
+function getStationsAround(allStations, coords, radius) {
+    var result = [];
+    for (var i = 0, n = allStations.length, s = allStations[0]; i < n; s = allStations[++i]) {
+        if (s != null && distance(s.coords, coords) < radius) result.push(s);
+    }
+    return result;
+}
 
 class OptimalRoutesCollection extends Array {
     /*getOptimalWays() {
@@ -25,7 +36,7 @@ class OptimalRoutesCollection extends Array {
         }
         return null;
     }*/
-    constructor(nowPos, needPos, time, types, speed, dopTimeMinutes) {
+    constructor(allStations, nowPos, needPos, time, types, speed, dopTimeMinutes) {
         super();
         this.getOptimalWays = function() {
             var result = [];
@@ -50,7 +61,11 @@ class OptimalRoutesCollection extends Array {
             return null;
         }
 
-        this.push(new OptimalRoute(nowPos, needPos, time, types, speed, dopTimeMinutes));
+        var myPoints = new Points(nowPos, needPos);
+        // Получим "начальный" список станций:
+        var stationsList = getStationsAround(allStations, myPoints.startPoint.coords, distance(myPoints.startPoint.coords, myPoints.finalPoint.coords));
+
+        this.push(new OptimalRoute(stationsList, nowPos, needPos, time, types, speed, dopTimeMinutes));
 
         var ignoringRoutes = [];
 
@@ -69,7 +84,7 @@ class OptimalRoutesCollection extends Array {
                 var ignoringRoutesAdd = [];
                 ignoringRoutesAdd = ignoringRoutesAdd.concat(selectedOptimalRoute.ignoringRoutes);
                 ignoringRoutesAdd.push(r);
-                var tmpOptimalRoute = new OptimalRoute(nowPos, needPos, time, types, speed, dopTimeMinutes, ignoringRoutesAdd);
+                var tmpOptimalRoute = new OptimalRoute(stationsList, nowPos, needPos, time, types, speed, dopTimeMinutes, ignoringRoutesAdd);
 
                 if (tmpOptimalRoute.totalTimeSeconds <= this[0].totalTimeSeconds / ddd) {
                     var tmpJSON = JSON.stringify(tmpOptimalRoute.points);

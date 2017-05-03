@@ -12,5 +12,6 @@ ReactDOM.render(
 
 //OfflinePluginRuntime.install();
 if ('serviceWorker' in navigator) {
-  const registration = runtime.register();
+  //const registration = 
+  runtime.register();
 }
