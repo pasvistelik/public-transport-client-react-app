@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import PointsHistoryStorage from './../modules/client/pointsHistoryStorage';
+import PointsHistoryStorage from './../modules/public-transport-client/pointsHistoryStorage';
 
 class PointsHistoryBlock extends Component {
     constructor (props) {

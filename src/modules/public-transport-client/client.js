@@ -1,16 +1,16 @@
-﻿import OptimalRoutesCollection from './../find-optimal-ways/optimalRoutesCollection';
-import MyDatabase from './../loadData';
-import ApiConfig from './../config/apiConfig';
+﻿import OptimalRoutesCollection from './../public-transport-find-optimal-ways/optimalRoutesCollection';
+import DataProvider from './dataProvider';
+import ApiConfig from './config';
 var apiPublicTransportServer = ApiConfig.apiPublicTransportServer;
 import PointsHistoryStorage from './pointsHistoryStorage';
 
 //import './install-service-worker.js';
 
 if (navigator.onLine === undefined || navigator.onLine === false){
-    MyDatabase.loadDataAndInitialize();
+    DataProvider.loadDataAndInitialize();
 }
 else {
-    MyDatabase.loadDataOnly();
+    DataProvider.loadDataOnly();
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -221,7 +221,7 @@ async function getCountedOnServerWays(fromPositionStr, toPositionStr, myStartTim
 async function getCountedOnClientWays(fromPositionStr, toPositionStr, myStartTimeStr, my_dopTimeMinutes, my_speed, typesStr) {
     console.log("Start local counting...");
 
-    await MyDatabase.loadDataAndInitialize();
+    await DataProvider.loadDataAndInitialize();
 
     var startOptimalRoutePoint = strToCoords(fromPositionStr);
     var finalOptimalRoutePoint = strToCoords(toPositionStr);
@@ -234,7 +234,7 @@ async function getCountedOnClientWays(fromPositionStr, toPositionStr, myStartTim
     if (types === undefined || types == null) types = ["bus", "trolleybus"];
 
     var startInitializingMoment = Date.now();
-    var res = new OptimalRoutesCollection(MyDatabase.getAllStations(), startOptimalRoutePoint, finalOptimalRoutePoint, myStartTime, types, parseFloat(my_speed), parseFloat(my_dopTimeMinutes));
+    var res = new OptimalRoutesCollection(DataProvider.getAllStations(), startOptimalRoutePoint, finalOptimalRoutePoint, myStartTime, types, parseFloat(my_speed), parseFloat(my_dopTimeMinutes));
     AppClient.findedOptimalWays = res.getOptimalWays();
     
     console.log("Finded " + AppClient.findedOptimalWays.length + " optimal routes. Time = " + (Date.now() - startInitializingMoment) + " ms.");

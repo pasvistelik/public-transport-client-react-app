@@ -1,7 +1,7 @@
-﻿//var fetch = require('node-fetch');
-import initialize from './initialize';
+//var fetch = require('node-fetch');
+import initialize from './../public-transport-initialize-data/initialize';
 
-import ApiConfig from './config/apiConfig';
+import ApiConfig from './config';
 var apiPublicTransportServer = ApiConfig.apiPublicTransportServer;
 
 /*var strGetStations = apiPublicTransportServer + "stations/";
@@ -108,7 +108,7 @@ async function loadData() {
 
 //loadData();
 
-class MyDatabase {
+class DataProvider {
     static getAllStations() {
         return allStations;
     }
@@ -139,5 +139,4 @@ class MyDatabase {
 // End load data.
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-//export default {getAllStations, getAllRoutes, getAllTimetables, getAllStationsJSON, getAllRoutesJSON, getAllTimetablesJSON, loadData};
-export default MyDatabase;
+export default DataProvider;

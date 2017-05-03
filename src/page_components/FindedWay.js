@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import AppClient from './../modules/client/client';
+import AppClient from './../modules/public-transport-client/client';
 
 class FindedWay extends Component {
   render() {      
