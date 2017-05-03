@@ -1,8 +1,8 @@
-﻿import Points from './points';
+﻿//import Points from './points';
 //import IgnoringFragments from './ignoringFragments';
 
 class OptimalRoute {
-    constructor(stationsList, nowPos, needPos, time, types, goingSpeed, dopTimeMinutes, ignoringRoutesAdd, ignoringList) {
+    constructor(myPoints, stationsList, nowPos, needPos, time, types, goingSpeed, dopTimeMinutes, ignoringRoutesAdd, ignoringList) {
         if (ignoringRoutesAdd != null) this.ignoringRoutes = ignoringRoutesAdd;
         else this.ignoringRoutes = [];
 
@@ -20,7 +20,7 @@ class OptimalRoute {
         //if (ignoringList != null) this.myIgnoringFragments = new IgnoringFragments(ignoringList);
         //else this.myIgnoringFragments = new IgnoringFragments();
 
-        var myPoints = new Points(nowPos, needPos);
+        //var myPoints = new Points(nowPos, needPos);
         
         myPoints.fillStartData(stationsList, goingSpeed, reservedTimeSeconds, this.myIgnoringFragments);
 
