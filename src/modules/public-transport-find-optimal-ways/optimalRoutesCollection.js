@@ -3,7 +3,7 @@ import OptimalRoute from './optimalRoute';
 import OptimalWay from './optimalWay';
 import Points from './points';
 
-import GeoCoords from './../coords/geoCoords';
+import GeoCoords from './../geo-coords-functions/geoCoords';
 var distance = GeoCoords.distance;
 function getStationsAround(allStations, coords, radius) {
     var result = [];
