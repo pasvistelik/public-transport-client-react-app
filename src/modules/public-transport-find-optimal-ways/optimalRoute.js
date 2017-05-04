@@ -2,14 +2,14 @@
 //import IgnoringFragments from './ignoringFragments';
 
 class OptimalRoute {
-    constructor(myPoints, stationsList, nowPos, needPos, time, types, goingSpeed, dopTimeMinutes, ignoringRoutesAdd, ignoringList) {
+    constructor(myPoints, stationsList, /*nowPos, needPos,*/ time, types, goingSpeed, dopTimeMinutes, ignoringRoutesAdd, ignoringList) {
         if (ignoringRoutesAdd != null) this.ignoringRoutes = ignoringRoutesAdd;
         else this.ignoringRoutes = [];
 
         this.points = [];
 
-        this.needPos = needPos;
-        this.nowPos = nowPos;
+        //this.needPos = needPos;
+        //this.nowPos = nowPos;
         this.goingSpeed = goingSpeed;
         this.time = time;
         var reservedTimeSeconds = 60 * dopTimeMinutes;

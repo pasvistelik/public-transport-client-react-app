@@ -6,12 +6,12 @@ import PointsHistoryStorage from './pointsHistoryStorage';
 
 //import './install-service-worker.js';
 
-if (navigator.onLine === undefined || navigator.onLine === false){
+/*if (navigator.onLine === undefined || navigator.onLine === false){
     DataProvider.loadDataAndInitialize();
 }
 else {
     DataProvider.loadDataOnly();
-}
+}*/
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // Client.

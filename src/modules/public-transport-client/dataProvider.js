@@ -2,7 +2,7 @@
 import initialize from './../public-transport-initialize-data/initialize';
 
 import ApiConfig from './config';
-var apiPublicTransportServer = ApiConfig.apiPublicTransportServer;
+//var apiPublicTransportServer = ApiConfig.apiPublicTransportServer;
 
 /*var strGetStations = apiPublicTransportServer + "stations/";
 strGetStations = "json/stations.json";
@@ -35,9 +35,8 @@ async function loadDataOnly() {
     if(!allStationsLoaded){
         if (localStorage["allStationsJSON"] === undefined || localStorage["allStationsJSON"] == null) {
             console.log("Downloading stations from server...");
-            var strGetStations = apiPublicTransportServer + "stations/";
 
-            let response = await fetch(strGetStations);
+            let response = await fetch(ApiConfig.apiGetStationsUrl);
             allStationsJSON = await response.text();
             allStations = JSON.parse(allStationsJSON);//await response.json();
 
@@ -55,9 +54,8 @@ async function loadDataOnly() {
     if(!allRoutesLoaded){
         if (localStorage["allRoutesJSON"] === undefined || localStorage["allRoutesJSON"] == null) {
             console.log("Downloading routes from server...");
-            var strGetRoutes = apiPublicTransportServer + "routes/";
 
-            let response = await fetch(strGetRoutes);
+            let response = await fetch(ApiConfig.apiGetRoutesUrl);
             allRoutesJSON = await response.text();
             allRoutes = JSON.parse(allRoutesJSON);//await response.json();
 
@@ -75,9 +73,8 @@ async function loadDataOnly() {
     if(!allTimetablesLoaded){
         if (localStorage["allTimetablesJSON"] === undefined || localStorage["allTimetablesJSON"] == null) {
             console.log("Downloading timetables from server...");
-            var strGetTimetables = apiPublicTransportServer + "timetables/";
 
-            let response = await fetch(strGetTimetables);
+            let response = await fetch(ApiConfig.apiGetTimetablesUrl);
             allTimetablesJSON = await response.text();
             allTimetables = JSON.parse(allTimetablesJSON);//await response.json();
 

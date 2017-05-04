@@ -63,9 +63,9 @@ class OptimalRoutesCollection extends Array {
 
         var myPoints = new Points(nowPos, needPos);
         // Получим "начальный" список станций:
-        var stationsList = getStationsAround(allStations, myPoints.startPoint.coords, distance(myPoints.startPoint.coords, myPoints.finalPoint.coords));
+        var stationsList = getStationsAround(allStations, nowPos, distance(nowPos, needPos));
 
-        this.push(new OptimalRoute(myPoints, stationsList, nowPos, needPos, time, types, speed, dopTimeMinutes));
+        this.push(new OptimalRoute(myPoints, stationsList, /*nowPos, needPos,*/ time, types, speed, dopTimeMinutes));
 
         var ignoringRoutes = [];
 
@@ -85,7 +85,7 @@ class OptimalRoutesCollection extends Array {
                 ignoringRoutesAdd = ignoringRoutesAdd.concat(selectedOptimalRoute.ignoringRoutes);
                 ignoringRoutesAdd.push(r);
                 myPoints = new Points(nowPos, needPos);
-                var tmpOptimalRoute = new OptimalRoute(myPoints, stationsList, nowPos, needPos, time, types, speed, dopTimeMinutes, ignoringRoutesAdd);
+                var tmpOptimalRoute = new OptimalRoute(myPoints, stationsList, /*nowPos, needPos,*/ time, types, speed, dopTimeMinutes, ignoringRoutesAdd);
 
                 if (tmpOptimalRoute.totalTimeSeconds <= this[0].totalTimeSeconds / ddd) {
                     var tmpJSON = JSON.stringify(tmpOptimalRoute.points);

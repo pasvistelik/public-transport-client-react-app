@@ -31,7 +31,7 @@ class Points {
         }
     }
     fillStartData(stationsList, goingSpeed, reservedTime, myIgnoringFragments) {
-        this.finalPoint.tryUpdate(getTimeForGoingTo(distance(this.startPoint.coords, this.finalPoint.coords), goingSpeed) + 1200/*+ TimeSpan.FromMinutes(20)*/, this.startPoint, null, null);
+        this.finalPoint.tryUpdate(getTimeForGoingTo(distance(this.startPoint.coords, this.finalPoint.coords), goingSpeed) + 1800/*+ TimeSpan.FromMinutes(20)*/, this.startPoint, null, null);
         for (var i = 0, n = stationsList.length, st = stationsList[0]; i < n; st = stationsList[++i]) {
             if (myIgnoringFragments != null && myIgnoringFragments.contains(st.hashcode, null, null)) continue;
 
