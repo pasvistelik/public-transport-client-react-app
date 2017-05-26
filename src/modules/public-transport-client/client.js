@@ -1,8 +1,48 @@
-﻿import OptimalRoutesCollection from './../public-transport-find-optimal-ways/optimalRoutesCollection';
+﻿import runtime from 'serviceworker-webpack-plugin/lib/runtime';
+import OptimalRoutesCollection from './../public-transport-find-optimal-ways/optimalRoutesCollection';
 import DataProvider from './dataProvider';
 import ApiConfig from './config';
 var apiPublicTransportServer = ApiConfig.apiPublicTransportServer;
 import PointsHistoryStorage from './pointsHistoryStorage';
+
+//console.log('test123');
+//console.log(navigator);
+if ('serviceWorker' in navigator) {
+  console.log('ServiceWorker was finded in navigator.');
+  const registration = runtime.register();
+  
+  registration.then(function() {
+    console.log('ServiceWorker registered.');
+    //console.log(registration);
+    //console.log(navigator.serviceWorker);
+
+    var controller = navigator.serviceWorker.controller;
+    if (controller != null) {
+        controller.postMessage("no-kill-sw");
+        setInterval(function(){
+            controller.postMessage("no-kill-sw");
+        }, ApiConfig.clientVsSwNoKillingMessageInterval);
+        navigator.serviceWorker.addEventListener('message', function(event) {
+            if(event.data === 'no-kill-sw-accepted') {
+                //console.log('Client: SW call no-kill-sw-accepted.')
+            }
+            else if(event.data.requestType === 'optimalWayResult'){
+                handleOptimalWayResult(event.data);
+            }
+            //console.log(22222)
+            //console.log(event.data.message);
+            //console.log(event.data);
+        });
+    }
+    else {
+
+    }
+  })
+}
+else {
+    console.log('ServiceWorker not finded in navigator.');
+}
+
 
 //import './install-service-worker.js';
 
@@ -52,8 +92,8 @@ class AppClient {
     static async findWays(fromPositionStr, toPositionStr, myStartTimeStr, my_dopTimeMinutes, my_speed, typesStr) {
         var findedOptimalWays = null;
         try { // Пробуем получить оптимальные пути с сервера.
-            findedOptimalWays = await getCountedOnServerWays(fromPositionStr, toPositionStr, myStartTimeStr, my_dopTimeMinutes, my_speed, typesStr);
-        } catch (e) { // Иначе выполняем все расчеты на клиенте.
+        //    findedOptimalWays = await getCountedOnServerWays(fromPositionStr, toPositionStr, myStartTimeStr, my_dopTimeMinutes, my_speed, typesStr);
+        //} catch (e) { // Иначе выполняем все расчеты на клиенте.
             findedOptimalWays = await getCountedOnClientWays(fromPositionStr, toPositionStr, myStartTimeStr, my_dopTimeMinutes, my_speed, typesStr);
         } finally{
             if (findedOptimalWays != null && findedOptimalWays.length !== 0) {
@@ -221,7 +261,7 @@ async function getCountedOnServerWays(fromPositionStr, toPositionStr, myStartTim
 async function getCountedOnClientWays(fromPositionStr, toPositionStr, myStartTimeStr, my_dopTimeMinutes, my_speed, typesStr) {
     console.log("Start local counting...");
 
-    await DataProvider.loadDataAndInitialize();
+    //await DataProvider.loadDataAndInitialize();
 
     var startOptimalRoutePoint = strToCoords(fromPositionStr);
     var finalOptimalRoutePoint = strToCoords(toPositionStr);
@@ -234,12 +274,62 @@ async function getCountedOnClientWays(fromPositionStr, toPositionStr, myStartTim
     if (types === undefined || types == null) types = ["bus", "trolleybus"];
 
     var startInitializingMoment = Date.now();
-    var res = new OptimalRoutesCollection(DataProvider.getAllStations(), startOptimalRoutePoint, finalOptimalRoutePoint, myStartTime, types, parseFloat(my_speed), parseFloat(my_dopTimeMinutes));
-    AppClient.findedOptimalWays = res.getOptimalWays();
+
+    var params = {
+        startOptimalRoutePoint: startOptimalRoutePoint,
+        finalOptimalRoutePoint: finalOptimalRoutePoint,
+        startTime: myStartTime,
+        transportTypes: types,
+        goingSpeed: parseFloat(my_speed), 
+        dopTimeMinutes: parseFloat(my_dopTimeMinutes)
+    };
+    try {
+        AppClient.findedOptimalWays = await getOptimalRoutesCollectionFromSw(params);
+        if(AppClient.findedOptimalWays == null) throw new Error();
+    } catch (e){
+        console.log('Start counting without using SW.');
+        await DataProvider.loadDataAndInitialize();
+        var res = new OptimalRoutesCollection(
+            DataProvider.getAllStations(), 
+            params.startOptimalRoutePoint, 
+            params.finalOptimalRoutePoint, 
+            params.startTime,
+            params.transportTypes,
+            params.goingSpeed,
+            params.dopTimeMinutes
+        );
+        console.log(res);
+        AppClient.findedOptimalWays = res.getOptimalWays();
+        console.log(AppClient.findedOptimalWays);
+    }
     
     console.log("Finded " + AppClient.findedOptimalWays.length + " optimal routes. Time = " + (Date.now() - startInitializingMoment) + " ms.");
 
     return AppClient.findedOptimalWays;
+}
+
+var myResolve;//, myReject;
+async function getOptimalRoutesCollectionFromSw(params) { 
+    let promise = new Promise(function (resolve, reject) { 
+        myResolve = resolve;
+        //myReject = reject;
+                        
+        /*request.onerror = function(event) {
+            reject(event.target.error);
+        }
+        request.onsuccess = function(event) {
+            resolve(event.target.result);
+        }*/
+    });
+    navigator.serviceWorker.controller.postMessage({
+            requestType: 'optimalWay',
+            params: params
+        }); 
+    //console.log(promise);
+    return await promise;
+}
+function handleOptimalWayResult(data){
+    myResolve(data.result);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////

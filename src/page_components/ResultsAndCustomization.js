@@ -106,6 +106,7 @@ class ResultsAndCustomization extends Component{
       );
       case ResultStatus.error: return(
         <div>
+          <form action="#"><input className="block_elem" type="button" value="Назад" onClick={this.props.onCanceled}/></form>
           Error...
         </div>
       );
