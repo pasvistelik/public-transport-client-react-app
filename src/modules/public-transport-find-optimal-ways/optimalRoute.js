@@ -1,4 +1,4 @@
-﻿//import Points from './points';
+﻿ //import Points from './points';
 //import IgnoringFragments from './ignoringFragments';
 
 class OptimalRoute {
