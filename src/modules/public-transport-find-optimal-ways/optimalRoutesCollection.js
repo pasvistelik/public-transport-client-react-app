@@ -5,10 +5,16 @@ import Points from './points';
 
 import GeoCoords from './../geo-coords-functions/geoCoords';
 var distance = GeoCoords.distance;
-function getStationsAround(allStations, coords, radius) {
+
+const heuristicBestTransportSpeed = 40;
+
+function getStationsAround(allStations, nowPos, needPos, goingSpeed, heuristicBestTransportSpeed) {
     var result = [];
+    const fullDistance = distance(nowPos, needPos);
     for (var i = 0, n = allStations.length, s = allStations[0]; i < n; s = allStations[++i]) {
-        if (s != null && distance(s.coords, coords) < radius) result.push(s);
+        if (s != null && fullDistance > distance(nowPos, s.coords) + goingSpeed * distance(s.coords, needPos) / heuristicBestTransportSpeed) {
+            result.push(s);
+        }
     }
     return result;
 }
@@ -63,7 +69,7 @@ class OptimalRoutesCollection extends Array {
 
         var myPoints = new Points(nowPos, needPos);
         // Получим "начальный" список станций:
-        var stationsList = getStationsAround(allStations, nowPos, distance(nowPos, needPos));
+        var stationsList = getStationsAround(allStations, nowPos, needPos, speed, heuristicBestTransportSpeed);
 
         this.push(new OptimalRoute(myPoints, stationsList, /*nowPos, needPos,*/ time, types, speed, dopTimeMinutes));
 
