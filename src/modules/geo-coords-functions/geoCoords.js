@@ -3,7 +3,7 @@
         const earthRadius = 6372795;
         const pi180 = 0.017453;// 29251//Math.Round(Math.PI / 180, 5);
         //const pi2 = 1.5707963;
-        var zz = 1, yy = 1;
+        /*var zz = 1, yy = 1;
         function taylorSin(x) {
             yy = x * x;
             zz = x;
@@ -13,7 +13,7 @@
             yy = x * x;
             zz = yy;
             return 1 - (yy) / 2 + (zz *= yy) / 24;
-        }
+        }*/
         /*function taylorArcCos(x) {
             yy = x * x;
             zz = x;

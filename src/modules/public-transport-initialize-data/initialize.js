@@ -115,14 +115,17 @@ function initialize(allStations, allRoutes, allTimetables) {
         tabArr.push(tmpTab);
     }
 
-    for (let i = 0, n = allStations.length, currentStation = allStations[0]; i < n; currentStation = allStations[i]) {
-        if (currentStation.routesCodes == null || currentStation.routesCodes.length === 0) {
-            allStations.splice(i, 1);
-            n = allStations.length;
+    // Удаляем станции, через которые не идет ни один маршрут
+    let newAllStations = [];
+    for (let i = 0, n = allStations.length, currentStation = allStations[0]; i < n; currentStation = allStations[++i]) {
+        if (currentStation.routesCodes != null && currentStation.routesCodes.length !== 0) {
+            newAllStations.push(currentStation);
         }
-        else i++;
     }
+    allStations = newAllStations;
 
+    console.log("Time = " + (Date.now() - startInitializingMoment) + " ms.");
+    
     for (let i = 0, n = allRoutes.length, rr = allRoutes[0]; i < n; rr = allRoutes[++i]) {
 
         rr.getNextStation = getNextStation; 
@@ -171,6 +174,7 @@ function initialize(allStations, allRoutes, allTimetables) {
             continue;
         }
     }
+    
 
     for (let i = 0, n = allTimetables.length, timetable = allTimetables[0]; i < n; timetable = allTimetables[++i]) {
         timetable.findTimeAfter = findTimeAfter;
