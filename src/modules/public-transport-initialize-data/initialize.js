@@ -124,15 +124,16 @@ function initialize(allStations, allRoutes, allTimetables) {
     }
     allStations = newAllStations;
 
-    console.log("Time = " + (Date.now() - startInitializingMoment) + " ms.");
-    
+
     for (let i = 0, n = allRoutes.length, rr = allRoutes[0]; i < n; rr = allRoutes[++i]) {
 
         rr.getNextStation = getNextStation; 
         rr.getPreviousStation = getPreviousStation;
         rr.getTimetable = getTimetable;
 
-        if (rr.stationsCodes == null || rr.stationsCodes.length === 0) continue;
+        if (rr.stationsCodes == null || rr.stationsCodes.length === 0) {
+            continue;
+        }
 
         try {
             //if (rr.stationsCodes[rr.stationsCodes.Length - 1] != ']') continue;//!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -175,6 +176,7 @@ function initialize(allStations, allRoutes, allTimetables) {
         }
     }
     
+    console.log("Time = " + (Date.now() - startInitializingMoment) + " ms.");
 
     for (let i = 0, n = allTimetables.length, timetable = allTimetables[0]; i < n; timetable = allTimetables[++i]) {
         timetable.findTimeAfter = findTimeAfter;
@@ -194,7 +196,6 @@ function initialize(allStations, allRoutes, allTimetables) {
 
     console.log("Initialized. Time = " + (Date.now() - startInitializingMoment) + " ms.");
     //console.log("\n\n" + JSON.stringify(allTimetables[0]) + "\n\n");
-    //alert(distance({ lat: allStations[0].xCoord, lng: allStations[0].yCoord }, { lat: allStations[5].xCoord, lng: allStations[5].yCoord }));
 
 
     //for (let t = 0; t < 1000; t++) var ttt = GetStationsAround(allStations[0].coords, 30000).length;

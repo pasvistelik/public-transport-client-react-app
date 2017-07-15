@@ -3,8 +3,7 @@ import OptimalRoute from './optimalRoute';
 import OptimalWay from './optimalWay';
 import Points from './points';
 
-import GeoCoords from './../geo-coords-functions/geoCoords';
-var distance = GeoCoords.distance;
+import distance from 'geo-coords-distance';
 
 const heuristicBestTransportSpeed = 40;
 

@@ -1,6 +1,6 @@
 ﻿import Point from './point';
-import GeoCoords from './../geo-coords-functions/geoCoords';
-var distance = GeoCoords.distance;
+
+import distance from 'geo-coords-distance';
 
 
 function getTimeForGoingTo(distance, goingSpeed) {

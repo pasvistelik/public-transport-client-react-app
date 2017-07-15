@@ -1,4 +1,4 @@
-﻿import GeoCoords from './../geo-coords-functions/geoCoords';
+﻿import distance from 'geo-coords-distance';
 
 const dbName = "public_transport";
 const storeName = "points_history";
@@ -55,7 +55,7 @@ async function tryFindByCoords(coords) {
     const pointsHistory = await getAllPoints();
     let candidate = null;
     for (let i = 0, n = pointsHistory.length, currentPoint = pointsHistory[0], findedDistance = 150; i < n; currentPoint = pointsHistory[++i]) {
-        const currentDistance = GeoCoords.distance(coords, {lat: currentPoint.lat, lng: currentPoint.lng});
+        const currentDistance = distance(coords, {lat: currentPoint.lat, lng: currentPoint.lng});
         if (currentDistance < findedDistance) {
             findedDistance = currentDistance;
             candidate = currentPoint;
@@ -66,7 +66,7 @@ async function tryFindByCoords(coords) {
 async function tryPush(point) {
     const pointsHistory = await getAllPoints();
     for (let i = 0, n = pointsHistory.length, currentPoint = pointsHistory[0]; i < n; currentPoint = pointsHistory[++i]) {
-        if (GeoCoords.distance(point.coords, {lat: currentPoint.lat, lng: currentPoint.lng}) < 50) return null;
+        if (distance(point.coords, {lat: currentPoint.lat, lng: currentPoint.lng}) < 50) return null;
     }
 
     let promise = new Promise(async function (resolve, reject) {
