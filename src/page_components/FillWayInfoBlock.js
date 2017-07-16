@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import AppClient from './../modules/public-transport-client/client';
+import AppClient from 'public-transport-client';
 
 class FillWayInfoBlock extends Component {
     constructor(props) {

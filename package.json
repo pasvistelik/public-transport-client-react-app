@@ -4,7 +4,7 @@
   "dependencies": {
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
-    "public-transport-initialize-data": "https://github.com/pasvistelik/public-transport-initialize-data"
+    "public-transport-client": "https://github.com/pasvistelik/public-transport-client"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",

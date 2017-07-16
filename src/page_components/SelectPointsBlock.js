@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import AppClient from './../modules/public-transport-client/client';
-//import PointsHistoryStorage from './../modules/client/pointsHistoryStorage';
+import AppClient from 'public-transport-client';
 import PointsHistoryBlock from './PointsHistoryBlock';
 
 const SelectingPointStatus = {
