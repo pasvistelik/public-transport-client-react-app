@@ -39,17 +39,23 @@ class ResultsAndCustomization extends Component{
 
     const resultWays = await AppClient.findWays(fromPositionStr, toPositionStr, myStartTimeStr, my_dopTimeMinutes, my_speed, typesStr);
     if (resultWays != null) {
+      const totalTimePercentValue = this.state.totalTimePercentValue;
+      const totalGoingTimePercentValue = this.state.totalGoingTimePercentValue;
+      const totalTransportChangingCountPercentValue = this.state.totalTransportChangingCountPercentValue;
+      AppClient.customizeFindedOptimalWaysStart(totalTimePercentValue, totalGoingTimePercentValue, totalTransportChangingCountPercentValue);
+
       this.setState({
         status: ResultStatus.success,
-        findedOptimalWays: resultWays
+        //findedOptimalWays: resultWays,
+        findedOptimalWays: AppClient.findedOptimalWays
       });
+      //this.customizeFindedOptimalWays();//
     }
     else {
       this.setState({
         status: ResultStatus.error
       });
     }
-    //this.customizeFindedOptimalWays();
   }
   handleTotalTimePercentValueChange(value) {
     this.setState({
