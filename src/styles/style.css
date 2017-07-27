@@ -156,3 +156,8 @@
             cursor: help;
             display: inline-block;
         }
+
+        input[type = range] {
+            position: relative;
+            top: 5px;
+        }

@@ -110,7 +110,7 @@ class FillWayInfoBlock extends Component {
                 <div>
                     <form action="#">
                         <label>
-                            Виды транспорта:
+                            Используемые виды транспорта:
                         </label>
                         <label className="checkbox_elem"><input name="transportType" checked={this.state.busChecked} onChange={this.handleBusCheckedChanged} type="checkbox" value="bus"/> Автобус</label>
                         <label className="checkbox_elem"><input name="transportType" checked={this.state.trolleybusChecked} onChange={this.handleTrolleybusCheckedChanged} type="checkbox" value="trolleybus"/> Троллейбус</label>
@@ -119,9 +119,9 @@ class FillWayInfoBlock extends Component {
                         <label className="checkbox_elem"><input name="transportType" checked={this.state.tramChecked} onChange={this.handleTramCheckedChanged} disabled type="checkbox" value="tram"/> Трамвай</label>
                         <label className="checkbox_elem"><input name="transportType" checked={this.state.metroChecked} onChange={this.handleMetroCheckedChanged} disabled type="checkbox" value="metro"/> Метро</label>
 
-                        <label>Время отправки: <input name="time" type="time" value={this.state.selectedTime} onChange={this.handleSelectedTimeChanged}/></label>
-                        <label className="block_elem">Going speed: <input name="goingSpeed" type="range" min="2" max="10" step="0.5" value={this.state.selectedGoingSpeed} onChange={this.handleSelectedGoingSpeedChanged}/></label>
-                        <label className="block_elem">Reserved time: <input name="reservedTime" type="range" min="0" max="5" step="0.5" value={this.state.selectedReservedTime} onChange={this.handleSelectedReservedTimeChanged}/></label>
+                        <label>Момент отправки: <input name="time" type="time" value={this.state.selectedTime} onChange={this.handleSelectedTimeChanged}/></label>
+                        <label className="block_elem">Going speed: <input name="goingSpeed" type="range" min="2" max="10" step="0.5" value={this.state.selectedGoingSpeed} onChange={this.handleSelectedGoingSpeedChanged}/> {this.state.selectedGoingSpeed} км/ч</label>
+                        <label className="block_elem">Reserved time: <input name="reservedTime" type="range" min="0" max="5" step="0.5" value={this.state.selectedReservedTime} onChange={this.handleSelectedReservedTimeChanged}/> {this.state.selectedReservedTime} мин.</label>
                     </form>
                 </div>
                 </details>
