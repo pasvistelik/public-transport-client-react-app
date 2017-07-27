@@ -14,9 +14,9 @@ class ResultsAndCustomization extends Component{
     super(props);
     this.state = {
       status: ResultStatus.pending,
-      totalTimePercentValue: 1,
-      totalGoingTimePercentValue: 0.5,
-      totalTransportChangingCountPercentValue:0.05,
+      totalTimePercentValue: AppClient.totalTimePercentValue,
+      totalGoingTimePercentValue: AppClient.totalGoingTimePercentValue,
+      totalTransportChangingCountPercentValue: AppClient.totalTransportChangingCountPercentValue,
       findedOptimalWays: []
     };
     this.handleTotalTimePercentValueChange = this.handleTotalTimePercentValueChange.bind(this);
