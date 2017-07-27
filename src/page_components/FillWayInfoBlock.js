@@ -21,8 +21,8 @@ class FillWayInfoBlock extends Component {
             tramChecked: false,
             metroChecked: false,
             selectedTime: tmpTime,
-            selectedGoingSpeed: 5,
-            selectedReservedTime: 2,
+            selectedGoingSpeed: AppClient.goingSpeed,
+            selectedReservedTime: AppClient.dopTimeMinutes,
         };
         this.countWay = this.countWay.bind(this);
         
@@ -72,19 +72,18 @@ class FillWayInfoBlock extends Component {
         });
     }
     handleSelectedReservedTimeChanged(event) {
+        AppClient.dopTimeMinutes = event.target.value;
         this.setState({
             selectedReservedTime: event.target.value
         });
     }
     handleSelectedGoingSpeedChanged(event) {
+        AppClient.goingSpeed = event.target.value;
         this.setState({
             selectedGoingSpeed: event.target.value
         });
     }
-    countWay() {
-        AppClient.my_dopTimeMinutes = this.state.selectedReservedTime;
-        AppClient.my_speed = this.state.selectedGoingSpeed;
-        
+    countWay() {        
         var myStartTimeStr = this.state.selectedTime.toString();
 
         let selectedTypes = [];
