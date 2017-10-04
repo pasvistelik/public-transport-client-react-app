@@ -3,6 +3,7 @@ import './../styles/style.css';
 import ConfirmParamsBlock from "./ConfirmParamsBlock"; 
 import ResultsAndCustomization from "./ResultsAndCustomization";
 
+
 const AppStates = {
   confirmingParamsBlock: 0,
   viewingResults: 1
@@ -64,7 +65,7 @@ class App extends Component {
       <div className="App">
         <div id="application">
           <p>
-            <b>PublicTransportProject</b> - поиск наилучшего маршрута на общественном транспорте. {new Date().toLocaleTimeString()}
+            <b>PublicTransportProject</b> - поиск наилучшего маршрута на общественном транспорте. 
           </p>
         </div>
         <div id="content">

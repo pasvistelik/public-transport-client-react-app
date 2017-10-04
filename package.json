@@ -2,11 +2,11 @@
   "name": "js_client",
   "version": "2.0.0",
   "dependencies": {
-    "react": "^15.5.4",
-    "react-dom": "^15.5.4",
-    "public-transport-client": "https://github.com/pasvistelik/public-transport-client",
-    "public-transport-initialize-data": "https://github.com/pasvistelik/public-transport-initialize-data",
-    "public-transport-find-optimal-ways": "https://github.com/pasvistelik/public-transport-find-optimal-ways"
+    "public-transport-client": "git+https://github.com/pasvistelik/public-transport-client.git",
+    "public-transport-find-optimal-ways": "git+https://github.com/pasvistelik/public-transport-find-optimal-ways.git",
+    "public-transport-initialize-data": "git+https://github.com/pasvistelik/public-transport-initialize-data.git",
+    "react": "^15.6.2",
+    "react-dom": "^15.6.2"
   },
   "devDependencies": {
     "babel-cli": "^6.24.1",
