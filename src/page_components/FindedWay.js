@@ -77,6 +77,8 @@ class FindedWay extends Component {
             if (currentWay.points[i].station.name.toString() !== "") my_text += currentWay.points[i].station.name.toString();
             else my_text += currentWay.points[i].station.name.toString();
             my_text += "\" на транспорте \"" + currentWay.points[i].route.type.toString() + " " + currentWay.points[i].route.number.toString() + "\"";
+        
+            stationsCounter = 1;
         }
 
         var hours = Math.floor(currentWay.points[i].time / 3600);
