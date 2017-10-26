@@ -9,6 +9,14 @@ const ResultStatus = {
   error: -1
 };
 
+const PercentValueChanged = {
+  totalTime: 0,
+  goingTime: 1,
+  transportChangingCount: 2,
+  waitingTime: 3,
+  risk: 4
+};
+
 class ResultsAndCustomization extends Component{
   constructor(props) {
     super(props);
@@ -17,11 +25,15 @@ class ResultsAndCustomization extends Component{
       totalTimePercentValue: AppClient.totalTimePercentValue,
       totalGoingTimePercentValue: AppClient.totalGoingTimePercentValue,
       totalTransportChangingCountPercentValue: AppClient.totalTransportChangingCountPercentValue,
+      totalWaitingTimePercentValue: AppClient.totalWaitingTimePercentValue,
+      riskPercentValue: AppClient.riskPercentValue,
       findedOptimalWays: []
     };
     this.handleTotalTimePercentValueChange = this.handleTotalTimePercentValueChange.bind(this);
     this.handleTotalGoingTimePercentValueChange = this.handleTotalGoingTimePercentValueChange.bind(this);
     this.handleTotalTransportChangingCountPercentValueChange = this.handleTotalTransportChangingCountPercentValueChange.bind(this);
+    this.handleTotalWaitingTimePercentValueChange = this.handleTotalWaitingTimePercentValueChange.bind(this);
+    this.handleRiskPercentValueChange = this.handleRiskPercentValueChange.bind(this);
     this.customizeFindedOptimalWays = this.customizeFindedOptimalWays.bind(this);
     this.countWays = this.countWays.bind(this);
 
@@ -42,7 +54,9 @@ class ResultsAndCustomization extends Component{
       const totalTimePercentValue = this.state.totalTimePercentValue;
       const totalGoingTimePercentValue = this.state.totalGoingTimePercentValue;
       const totalTransportChangingCountPercentValue = this.state.totalTransportChangingCountPercentValue;
-      AppClient.customizeFindedOptimalWaysStart(totalTimePercentValue, totalGoingTimePercentValue, totalTransportChangingCountPercentValue);
+      const totalWaitingTimePercentValue = this.state.totalWaitingTimePercentValue;
+      const riskPercentValue = this.state.riskPercentValue;
+      AppClient.customizeFindedOptimalWaysStart(totalTimePercentValue, totalGoingTimePercentValue, totalTransportChangingCountPercentValue, totalWaitingTimePercentValue, riskPercentValue);
 
       this.setState({
         status: ResultStatus.success,
@@ -61,25 +75,47 @@ class ResultsAndCustomization extends Component{
     this.setState({
       totalTimePercentValue: value
     });
-    this.customizeFindedOptimalWays();
+    this.customizeFindedOptimalWays(PercentValueChanged.totalTime, value);
   }
   handleTotalGoingTimePercentValueChange(value) {
     this.setState({
       totalGoingTimePercentValue: value
     });
-    this.customizeFindedOptimalWays();
+    this.customizeFindedOptimalWays(PercentValueChanged.goingTime, value);
   }
   handleTotalTransportChangingCountPercentValueChange(value) {
     this.setState({
       totalTransportChangingCountPercentValue: value
     });
-    this.customizeFindedOptimalWays();
+    this.customizeFindedOptimalWays(PercentValueChanged.transportChangingCount, value);
   }
-  customizeFindedOptimalWays() {
-      const totalTimePercentValue = this.state.totalTimePercentValue;
-      const totalGoingTimePercentValue = this.state.totalGoingTimePercentValue;
-      const totalTransportChangingCountPercentValue = this.state.totalTransportChangingCountPercentValue;
-      AppClient.customizeFindedOptimalWaysStart(totalTimePercentValue, totalGoingTimePercentValue, totalTransportChangingCountPercentValue);
+  handleTotalWaitingTimePercentValueChange(value) {
+    this.setState({
+      totalWaitingTimePercentValue: value
+    });
+    this.customizeFindedOptimalWays(PercentValueChanged.waitingTime, value);
+  }
+  handleRiskPercentValueChange(value) {
+    this.setState({
+      riskPercentValue: value
+    });
+    this.customizeFindedOptimalWays(PercentValueChanged.risk, value);
+  }
+  customizeFindedOptimalWays(type, value) {
+      let totalTimePercentValue = this.state.totalTimePercentValue;
+      let totalGoingTimePercentValue = this.state.totalGoingTimePercentValue;
+      let totalTransportChangingCountPercentValue = this.state.totalTransportChangingCountPercentValue;
+      let totalWaitingTimePercentValue = this.state.totalWaitingTimePercentValue;
+      let riskPercentValue = this.state.riskPercentValue;
+      switch(type) {
+        case PercentValueChanged.totalTime: {totalTimePercentValue = value; break;}
+        case PercentValueChanged.goingTime: {totalGoingTimePercentValue = value; break;}
+        case PercentValueChanged.transportChangingCount: {totalTransportChangingCountPercentValue = value; break;}
+        case PercentValueChanged.waitingTime: {totalWaitingTimePercentValue = value; break;}
+        case PercentValueChanged.risk: {riskPercentValue = value; break;}
+        default: break;
+      }
+      AppClient.customizeFindedOptimalWaysStart(totalTimePercentValue, totalGoingTimePercentValue, totalTransportChangingCountPercentValue, totalWaitingTimePercentValue, riskPercentValue);
       
       this.setState({
         findedOptimalWays: AppClient.findedOptimalWays
@@ -103,9 +139,13 @@ class ResultsAndCustomization extends Component{
             onTotalTimePercentValueChange={this.handleTotalTimePercentValueChange} 
             onTotalGoingTimePercentValueChange={this.handleTotalGoingTimePercentValueChange} 
             onTotalTransportChangingCountPercentValueChange={this.handleTotalTransportChangingCountPercentValueChange} 
+            onTotalWaitingTimePercentValueChange={this.handleTotalWaitingTimePercentValueChange} 
+            onRiskPercentValueChange={this.handleRiskPercentValueChange} 
             totalTimePercentValue={this.state.totalTimePercentValue}
             totalGoingTimePercentValue={this.state.totalGoingTimePercentValue}
             totalTransportChangingCountPercentValue={this.state.totalTransportChangingCountPercentValue}
+            totalWaitingTimePercentValue={this.state.totalWaitingTimePercentValue}
+            riskPercentValue={this.state.riskPercentValue}
           />
           <Results findedOptimalWays={this.state.findedOptimalWays} />
         </div>

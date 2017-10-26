@@ -131,6 +131,7 @@ class FillWayInfoBlock extends Component {
                         <label className="checkbox_elem"><input name="isNeedCountingOnServer" checked={this.state.isNeedCountingOnServer} onChange={this.handleCountingOnServerFlagChanged} type="checkbox"/> Count ways on a server.</label>
                         
                         <label>Момент отправки: <input name="time" type="time" value={this.state.selectedTime} onChange={this.handleSelectedTimeChanged}/></label>
+                        <label disabled>Успеть до: <input disabled name="time" type="time"/></label>
                         <label className="block_elem">Going speed: <input name="goingSpeed" type="range" min="2" max="10" step="0.5" value={this.state.selectedGoingSpeed} onChange={this.handleSelectedGoingSpeedChanged}/> {this.state.selectedGoingSpeed} км/ч</label>
                         <label className="block_elem">Reserved time: <input name="reservedTime" type="range" min="0" max="5" step="0.5" value={this.state.selectedReservedTime} onChange={this.handleSelectedReservedTimeChanged}/> {this.state.selectedReservedTime} мин.</label>
                     </form>

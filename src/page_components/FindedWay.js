@@ -4,10 +4,17 @@ import AppClient from 'public-transport-client';
 class FindedWay extends Component {
   render() {      
     const currentWay = this.props.way;
-
+    //console.log(currentWay);
+    
     const tmpTotalTimeSecondsEffictivity = (AppClient.minimalTimeSeconds / parseFloat(currentWay.totalTimeSeconds) * 100).toFixed(0);
     const tmpTotalGoingTimeSecondsEffictivity = (AppClient.minimalGoingTimeSeconds / parseFloat(currentWay.totalGoingTimeSeconds) * 100).toFixed(0);
+    //const tmpTotalGoingTimeSecondsEffictivity = (100 - parseFloat(currentWay.totalWaitingTime) / parseFloat(currentWay.totalGoingTimeSeconds) * 100).toFixed(0);
     const tmpTransportChangingCountEffictivity = (parseFloat(currentWay.totalTransportChangingCount) === 0 ? 100 : (AppClient.minimalTransportChangingCount / parseFloat(currentWay.totalTransportChangingCount)) * 100).toFixed(0);
+    //const tmpTotalWaitingTimeSecondsEffictivity = (AppClient.minimalWaitingTimeSeconds / parseFloat(currentWay.totalWaitingTime) * 100).toFixed(0);
+    const tmpTotalWaitingTimeSecondsEffictivity = (100 - parseFloat(currentWay.totalWaitingTime) / parseFloat(currentWay.totalTimeSeconds) * 100).toFixed(0);
+    
+    var ttttt = Math.ceil(currentWay.riskEffectivity * 100);
+    const tmpRiskTimeSecondsEffictivity = ttttt;//(AppClient.minimalRiskTimeSeconds / parseFloat(currentWay.minimalWaitingTime) * 100).toFixed(0);
 
     let p1ClassName;
     if (tmpTotalTimeSecondsEffictivity > 85) p1ClassName = "effectivityPercentGold";
@@ -23,10 +30,25 @@ class FindedWay extends Component {
     if (tmpTransportChangingCountEffictivity > 85) p3ClassName = "effectivityPercentGold";
     else if (tmpTransportChangingCountEffictivity > 50) p3ClassName = "effectivityPercentPlatinum";
     else p3ClassName = "effectivityPercentSilver";
+    
+    let p4ClassName;
+    if (tmpTotalWaitingTimeSecondsEffictivity > 85) p4ClassName = "effectivityPercentGold";
+    else if (tmpTotalWaitingTimeSecondsEffictivity > 50) p4ClassName = "effectivityPercentPlatinum";
+    else p4ClassName = "effectivityPercentSilver";
+    
+    let p5ClassName;
+    if (tmpRiskTimeSecondsEffictivity > 85) p5ClassName = "effectivityPercentGold";
+    else if (tmpRiskTimeSecondsEffictivity > 50) p5ClassName = "effectivityPercentPlatinum";
+    else p5ClassName = "effectivityPercentSilver";
+
 
     var p1 = (<span className={p1ClassName} title="TotalTimeSecondsEffictivity">{tmpTotalTimeSecondsEffictivity.toString()}%</span>);
     var p2 = (<span className={p2ClassName} title="TotalGoingTimeSecondsEffictivity">{tmpTotalGoingTimeSecondsEffictivity.toString()}%</span>);
     var p3 = (<span className={p3ClassName} title="TransportChangingCountEffictivity">{tmpTransportChangingCountEffictivity.toString()}%</span>);
+    var p4 = (<span className={p4ClassName} title="TotalWaitingTimeSecondsEffictivity">{tmpTotalWaitingTimeSecondsEffictivity/*currentWay.totalWaitingTime*/.toString()}%</span>);
+    var p5 = (<span className={p5ClassName} title="RiskTimeSecondsEffictivity">{tmpRiskTimeSecondsEffictivity.toString()}%</span>);
+
+    //if(currentWay.minimalWaitingTime<=0) console.log(currentWay);
 
     let stepsList = [];
     for (var i = 1, stationsCounter = 1; i < currentWay.points.length; i++) {
@@ -68,7 +90,7 @@ class FindedWay extends Component {
         if (seconds < 10) secondsStr = "0" + secondsStr;
         my_text += " (" + hoursStr + ":" + minutesStr + ":" + secondsStr + ")";
 
-        stepsList.push(<li key={i}><span style={{cursor: 'pointer'}}>{my_text}</span></li>);
+        stepsList.push(<li key={i}><span style={{cursor: 'pointer'}}>{my_text} (arrive = {currentWay.points[i].arrivalTime}, dispatch = {currentWay.points[i].dispatchTime})</span></li>);
     }
     
     
@@ -78,7 +100,7 @@ class FindedWay extends Component {
     return(
       <div>
         <div className="resultLink">
-          {p1}{p2}{p3}
+          {p1}{p2}{p3}{p4}{p5}
           <ul>{stepsList}</ul>
         </div>
       </div>
