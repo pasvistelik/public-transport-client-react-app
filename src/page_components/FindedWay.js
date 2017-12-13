@@ -42,11 +42,13 @@ class FindedWay extends Component {
     else p5ClassName = "effectivityPercentSilver";
 
 
-    var p1 = (<span className={p1ClassName} title="TotalTimeSecondsEffictivity">{tmpTotalTimeSecondsEffictivity.toString()}%</span>);
-    var p2 = (<span className={p2ClassName} title="TotalGoingTimeSecondsEffictivity">{tmpTotalGoingTimeSecondsEffictivity.toString()}%</span>);
-    var p3 = (<span className={p3ClassName} title="TransportChangingCountEffictivity">{tmpTransportChangingCountEffictivity.toString()}%</span>);
-    var p4 = (<span className={p4ClassName} title="TotalWaitingTimeSecondsEffictivity">{tmpTotalWaitingTimeSecondsEffictivity/*currentWay.totalWaitingTime*/.toString()}%</span>);
-    var p5 = (<span className={p5ClassName} title="RiskTimeSecondsEffictivity">{tmpRiskTimeSecondsEffictivity.toString()}%</span>);
+    
+
+  var p1 = (<span className={p1ClassName} title="TotalTimeSecondsEffictivity"><img alt="" src="../images/timer.png"/>{/*tmpTotalTimeSecondsEffictivity.toString()*/toHHMMSS(currentWay.totalTimeSeconds)}</span>);
+    var p2 = (<span className={p2ClassName} title="TotalGoingTimeSecondsEffictivity"><img alt="" src="../images/walking.png"/>{/*tmpTotalGoingTimeSecondsEffictivity.toString()*/toHHMMSS(currentWay.totalGoingTimeSeconds)}</span>);
+    var p3 = (<span className={p3ClassName} title="TransportChangingCountEffictivity"><img alt="" src="../images/change.png"/>{/*tmpTransportChangingCountEffictivity.toString()*/currentWay.totalTransportChangingCount}</span>);
+    var p4 = (<span className={p4ClassName} title="TotalWaitingTimeSecondsEffictivity"><img alt="" src="../images/wait.png"/>{/*tmpTotalWaitingTimeSecondsEffictivity.toString()*/toHHMMSS(currentWay.totalWaitingTime)}</span>);
+    var p5 = (<span className={p5ClassName} title="RiskTimeSecondsEffictivity"><img alt="" src="../images/good.png"/>{tmpRiskTimeSecondsEffictivity.toString()}%</span>);
 
     //if(currentWay.minimalWaitingTime<=0) console.log(currentWay);
 
@@ -74,14 +76,14 @@ class FindedWay extends Component {
             else if(stationsCounter%10 > 1 && stationsCounter%10 < 5) tmpText = "остановки";
             else tmpText = "остановок";
             my_text = "Проедьте "+stationsCounter+" "+tmpText+" до \"";
-            if (currentWay.points[i].station.name.toString() !== "") my_text += currentWay.points[i].station.name.toString();
-            else my_text += currentWay.points[i].station.name.toString();
+            //if (currentWay.points[i].station.name.toString() !== "") my_text += currentWay.points[i].station.name.toString(); else 
+            my_text += currentWay.points[i].station.name.toString();
             my_text += "\" на транспорте \"" + currentWay.points[i].route.type.toString() + " " + currentWay.points[i].route.number.toString() + "\"";
         
             stationsCounter = 1;
         }
 
-        var hours = Math.floor(currentWay.points[i].time / 3600);
+        /*var hours = Math.floor(currentWay.points[i].time / 3600);
         var hoursStr = hours.toString();
         if (hours < 10) hoursStr = "0" + hoursStr;
         var minutes = Math.floor((currentWay.points[i].time - hours * 3600) / 60);
@@ -90,9 +92,16 @@ class FindedWay extends Component {
         var seconds = currentWay.points[i].time - hours * 3600 - minutes * 60;
         var secondsStr = seconds.toString();
         if (seconds < 10) secondsStr = "0" + secondsStr;
-        my_text += " (" + hoursStr + ":" + minutesStr + ":" + secondsStr + ")";
+        my_text += " (" + hoursStr + ":" + minutesStr + ":" + secondsStr + ")";*/
 
-        stepsList.push(<li key={i}><span style={{cursor: 'pointer'}}>{my_text} (arrive = {currentWay.points[i].arrivalTime}, dispatch = {currentWay.points[i].dispatchTime})</span></li>);
+        if (i === currentWay.points.length - 1){
+          stepsList.push(<li key={i}><span style={{cursor: 'pointer'}}>{my_text} (arrive = {toHHMMSS(currentWay.points[i].arrivalTime)})</span></li>);
+        }
+        else {
+          stepsList.push(<li key={i}><span style={{cursor: 'pointer'}}>{my_text} (arrive = {toHHMMSS(currentWay.points[i].arrivalTime)}, dispatch = {toHHMMSS(currentWay.points[i].dispatchTime)})</span></li>);
+        }
+        
+
     }
     
     
@@ -111,3 +120,17 @@ class FindedWay extends Component {
 }
 
 export default FindedWay;
+
+function toHHMMSS(sec_num) {
+  var hours   = Math.floor(sec_num / 3600);
+  var minutes = Math.floor((sec_num - (hours * 3600)) / 60);
+  var seconds = sec_num - (hours * 3600) - (minutes * 60);
+
+  if (hours   < 10) {hours   = "0"+hours;}
+  if (minutes < 10) {minutes = "0"+minutes;}
+  if (seconds < 10) {seconds = "0"+seconds;}
+  var result = "";
+  if (hours > 0) result = hours+':'+minutes+':'+seconds
+  else result = minutes+':'+seconds
+  return result;
+}

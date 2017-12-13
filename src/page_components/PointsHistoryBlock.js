@@ -19,7 +19,102 @@ class PointsHistoryBlock extends Component {
     }
     render() {
         var setPointHandler = /*function() {alert('');}/*/ this.props.setPointHandler;
-        return(
+        var filter_text = "";
+        if (this.props.filter) filter_text = this.props.filter.toLowerCase();
+        /*console.log(this.state.historyList.filter(function(value){
+            return value.description.toLowerCase().indexOf(filter_text) > -1;
+        }));*/
+        var filteredHistory = this.state.historyList.filter(function(value){
+            return value.description.toLowerCase().indexOf(filter_text) > -1;
+        });
+        var filteredFavorites = this.state.historyList.filter(function(value){
+            return value.description.toLowerCase().indexOf(filter_text) > -1 && value.isFavorite;
+        });
+        var filteredHistoryContent = "";
+        if (filteredHistory.length !== 0){
+            filteredHistoryContent = (
+                <span>
+                <li role="presentation" className="dropdown-header">Недавно использованные:</li>
+                {filteredHistory.map(function(item, index){
+                    let handler = function() {
+                        //console.log(item);
+                        setPointHandler({lat: item.lat, lng: item.lng}, item.description);
+                    }
+                    let deleteHandler = function() {
+                        
+                    }
+                    let favoriteHandler = function() {
+                        
+                    }
+                    /*
+                    <span className="glyphicon glyphicon-heart-empty"></span>
+                    <a role="menuitem" tabIndex="-1" href="#">
+                        {item.description}
+                    </a>
+                    <span className="glyphicon glyphicon-trash"></span>
+                    */
+                    return (
+                        <li 
+                            key={index} 
+                            
+                            role="presentation"
+                            className="history-item"
+                        >
+                            
+
+                            <table className="table table-condensed history-table">
+
+                                <tr>
+                                    <td onClick={favoriteHandler} className="with-icon"><span className="glyphicon glyphicon-heart-empty in-table"></span></td>
+                                    <td style={{width: '100%'}}><a onClick={handler} role="menuitem" tabIndex="-1" href="#">
+                                            {item.description}
+                                        </a></td>
+                                    <td onClick={deleteHandler} className="with-icon"><span className="glyphicon glyphicon-trash in-table"></span></td>
+                                </tr>
+                            </table>
+                        </li>
+                    );//<FindedWay key={index} way={item}/>;
+                })}
+                </span>
+            );
+        }
+        var filteredFavoritesContent = "";
+        if (filteredFavorites && filteredFavorites.length !== 0){
+            filteredFavoritesContent = (
+                <span>
+                <li role="presentation" className="dropdown-header">Избранные места:</li>
+                {filteredFavorites.map(function(item, index){
+                    let handler = function() {
+                        //console.log(item);
+                        setPointHandler({lat: item.lat, lng: item.lng}, item.description);
+                    }
+                    return (
+                        <li 
+                            key={index} 
+                            onClick={handler}
+                            role="presentation"
+                            className="history-item"
+                        >
+                            <a role="menuitem" tabIndex="-1" href="#">
+                                {item.description}
+                            </a>
+                        </li>
+                    );//<FindedWay key={index} way={item}/>;
+                })}
+                </span>
+            );
+        }
+        if(filteredFavorites.length !== 0 || filteredHistory.length !== 0){
+            return(<ul className="dropdown-menu" role="menu" aria-labelledby="menu1">
+                    {filteredFavoritesContent}
+                    {filteredHistoryContent}
+                </ul>
+            );
+        }
+        else{
+            return(<ul style={{display:'none'}} className="dropdown-menu" role="menu" aria-labelledby="menu1"></ul>);
+        }
+        /*return(
             <div id="pointsHistoryBlock">
                 <details>
                     <summary>История использованных точек</summary>
@@ -43,7 +138,7 @@ class PointsHistoryBlock extends Component {
                     </div>
                 </details>
             </div>
-        );
+        );*/
     }
 }
 

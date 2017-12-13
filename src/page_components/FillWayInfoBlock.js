@@ -1,5 +1,13 @@
 import React, { Component } from 'react';
+import ReactDOM from 'react-dom';
 import AppClient from 'public-transport-client';
+
+var TimeTypes = {
+    dispatchNow: 0,
+    dispatchAfter: 1,
+    dispatchAt: 2,
+    arriveBefore: 3
+}
 
 class FillWayInfoBlock extends Component {
     constructor(props) {
@@ -13,6 +21,7 @@ class FillWayInfoBlock extends Component {
         let tmpTime = hoursStr + ":" + minutesStr;
 
         this.state = {
+            timeType: TimeTypes.dispatchNow,
 
             busChecked: true,
             trolleybusChecked: true,
@@ -93,6 +102,10 @@ class FillWayInfoBlock extends Component {
     }
     countWay() {        
         var myStartTimeStr = this.state.selectedTime.toString();
+        if(this.state.timeType === TimeTypes.dispatchNow){
+            var tmpDate = new Date();
+            myStartTimeStr = tmpDate.getHours() + ":" + tmpDate.getMinutes(); //!!!
+        }
 
         let selectedTypes = [];
         if(this.state.busChecked) selectedTypes.push("bus");
@@ -110,39 +123,97 @@ class FillWayInfoBlock extends Component {
 
         this.props.onConfirmed(fromPositionStr, toPositionStr, myStartTimeStr, this.state.selectedReservedTime, this.state.selectedGoingSpeed, typesStr);
     }
+    /*
+    <div className="input-group">
+        <span className="input-group-addon">Отправление</span>
+        <div className="input-group-btn">
+            
+            <button className="btn btn-default" type="button">
+                    сейчас
+            </button>
+            <button className="btn btn-default" type="button">
+                    через
+            </button>
+            <button className="btn btn-default" type="button">
+                    в
+            </button>
+            <button className="btn btn-default" type="button">
+                    до
+            </button>
+        </div>
+    </div>
+    */
     render() {
         return(
             <div id="advanced_params_and_button">
-                <details id="start_route">
-                <summary>Дополнительные параметры построения маршрута</summary>
+                
+                <p>
+                <div className="input-group icon-button-time">
+                    <span className="input-group-addon"><span className="glyphicon glyphicon-time"></span></span>
+                    
+                    
+                    <button className="btn btn-default dropdown-toggle" type="button" id="menu3" data-toggle="dropdown">сейчас &nbsp;
+                    <span className="caret"></span></button>
+                    <ul className="dropdown-menu"  role="menu" aria-labelledby="menu3">
+                        <li role="presentation" className="dropdown-header">По времени отправления:</li>
+                        <li role="presentation"><a role="menuitem" tabIndex="-1" href="#">сейчас</a></li>
+                        <li role="presentation"><a role="menuitem" tabIndex="-1" href="#">через 1 2 3 5 10 15 20 30 минут</a></li>
+                        <li role="presentation"><a role="menuitem" tabIndex="-1" href="#">выбрать время</a></li>
+                        <li role="presentation" className="divider"></li>
+                        <li role="presentation" className="dropdown-header">По времени прибытия:</li>
+                        <li role="presentation"><a role="menuitem" tabIndex="-1" href="#">Успеть до...</a></li>
+                    </ul> 
+                    
+                    <span className="input-group-addon with-input">
+                        <input id="current-time" disabled value={new Date().toLocaleTimeString()}/>
+                    </span>
+                </div>
+                </p>
+                
+                
+
+                <p>
+                    <button type="button" onClick={this.countWay} className="btn btn-primary btn-lg btn-block">Проложить маршрут</button>
+                </p>
+
+                <p><details id="start_route" className="btn btn-default btn-block" style={{textAlign:'left'}}>
+                <summary>Дополнительные параметры</summary>
                 <div>
                     <form action="#">
                         <label>
                             Используемые виды транспорта:
                         </label>
-                        <label className="checkbox_elem"><input name="transportType" checked={this.state.busChecked} onChange={this.handleBusCheckedChanged} type="checkbox" value="bus"/> Автобус</label>
-                        <label className="checkbox_elem"><input name="transportType" checked={this.state.trolleybusChecked} onChange={this.handleTrolleybusCheckedChanged} type="checkbox" value="trolleybus"/> Троллейбус</label>
-                        <label className="checkbox_elem"><input name="transportType" checked={this.state.express_busChecked} onChange={this.handleExpress_busCheckedChanged} type="checkbox" value="express_bus"/> Экспресс-автобус</label>
-                        <label className="checkbox_elem"><input name="transportType" checked={this.state.marshChecked} onChange={this.handleMarshCheckedChanged} disabled type="checkbox" value="marsh"/> Маршрутка</label>
-                        <label className="checkbox_elem"><input name="transportType" checked={this.state.tramChecked} onChange={this.handleTramCheckedChanged} disabled type="checkbox" value="tram"/> Трамвай</label>
-                        <label className="checkbox_elem"><input name="transportType" checked={this.state.metroChecked} onChange={this.handleMetroCheckedChanged} disabled type="checkbox" value="metro"/> Метро</label>
+                        <div className="checkbox"><label className="checkbox_elem"><input name="transportType" checked={this.state.busChecked} onChange={this.handleBusCheckedChanged} type="checkbox" value="bus"/> Автобус</label></div>
+                        <div className="checkbox"><label className="checkbox_elem"><input name="transportType" checked={this.state.trolleybusChecked} onChange={this.handleTrolleybusCheckedChanged} type="checkbox" value="trolleybus"/> Троллейбус</label></div>
+                        <div className="checkbox"><label className="checkbox_elem"><input name="transportType" checked={this.state.express_busChecked} onChange={this.handleExpress_busCheckedChanged} type="checkbox" value="express_bus"/> Экспресс-автобус</label></div>
+                        <div className="checkbox"><label className="checkbox_elem"><input name="transportType" checked={this.state.marshChecked} onChange={this.handleMarshCheckedChanged} disabled type="checkbox" value="marsh"/> Маршрутка</label></div>
+                        <div className="checkbox"><label className="checkbox_elem"><input name="transportType" checked={this.state.tramChecked} onChange={this.handleTramCheckedChanged} disabled type="checkbox" value="tram"/> Трамвай</label></div>
+                        <div className="checkbox"><label className="checkbox_elem"><input name="transportType" checked={this.state.metroChecked} onChange={this.handleMetroCheckedChanged} disabled type="checkbox" value="metro"/> Метро</label></div>
 
                         <br/>
-                        <label className="checkbox_elem"><input name="isNeedCountingOnServer" checked={this.state.isNeedCountingOnServer} onChange={this.handleCountingOnServerFlagChanged} type="checkbox"/> Count ways on a server.</label>
+                        <div className="checkbox"><label className="checkbox_elem"><input name="isNeedCountingOnServer" checked={this.state.isNeedCountingOnServer} onChange={this.handleCountingOnServerFlagChanged} type="checkbox"/> Count ways on a server.</label></div>
                         
-                        <label>Момент отправки: <input name="time" type="time" value={this.state.selectedTime} onChange={this.handleSelectedTimeChanged}/></label>
-                        <label disabled>Успеть до: <input disabled name="time" type="time"/></label>
-                        <label className="block_elem">Going speed: <input name="goingSpeed" type="range" min="2" max="10" step="0.5" value={this.state.selectedGoingSpeed} onChange={this.handleSelectedGoingSpeedChanged}/> {this.state.selectedGoingSpeed} км/ч</label>
-                        <label className="block_elem">Reserved time: <input name="reservedTime" type="range" min="0" max="5" step="0.5" value={this.state.selectedReservedTime} onChange={this.handleSelectedReservedTimeChanged}/> {this.state.selectedReservedTime} мин.</label>
+                        <div className="form-group"><label>Момент отправки: <input name="time" type="time" value={this.state.selectedTime} onChange={this.handleSelectedTimeChanged}/></label></div>
+                        <div className="form-group"><label disabled>Успеть до: <input disabled name="time" type="time"/></label></div>
+                        <div className="form-group"><label className="block_elem">Going speed: <input name="goingSpeed" type="range" min="1" max="10" step="0.5" value={this.state.selectedGoingSpeed} onChange={this.handleSelectedGoingSpeedChanged}/> {this.state.selectedGoingSpeed} км/ч</label></div>
+                        <div className="form-group"><label className="block_elem">Reserved time: <input name="reservedTime" type="range" min="-6" max="6" step="0.5" value={this.state.selectedReservedTime} onChange={this.handleSelectedReservedTimeChanged}/> {this.state.selectedReservedTime} мин.</label></div>
                     </form>
                 </div>
-                </details>
-                <form id="buttonCountWay" action="#">
-                    <input className="checkbox_elem" type="button" value="Проложить маршрут" onClick={this.countWay}/>
-                </form>
+                </details></p>
+                
+                
             </div>
         );
     }
 }
-
+/*
+<form id="buttonCountWay" action="#">
+    <input className="checkbox_elem" type="button" value="Проложить маршрут" onClick={this.countWay}/>
+</form>
+*/
 export default FillWayInfoBlock;
+
+function tick() {
+        document.getElementById("current-time").value = new Date().toLocaleTimeString();
+  }
+setInterval(tick, 1000);

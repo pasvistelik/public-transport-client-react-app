@@ -6,6 +6,7 @@
     "public-transport-find-optimal-ways": "git+https://github.com/pasvistelik/public-transport-find-optimal-ways.git",
     "public-transport-initialize-data": "git+https://github.com/pasvistelik/public-transport-initialize-data.git",
     "react": "^15.6.2",
+    "react-bootstrap": "^0.31.5",
     "react-dom": "^15.6.2"
   },
   "devDependencies": {
@@ -19,7 +20,7 @@
     "babel-preset-es2015": "^6.22.0",
     "babel-preset-react": "^6.24.1",
     "geo-coords-distance": "^2.0.1",
-    "offline-plugin": "^4.7.0",
+    "offline-plugin": "^4.8.5",
     "react-scripts": "0.9.5",
     "serviceworker-loader": "^0.1.0",
     "serviceworker-webpack-plugin": "^0.2.1"

@@ -134,7 +134,7 @@ class ResultsAndCustomization extends Component{
       );
       case ResultStatus.success: return(
         <div>
-          <form action="#"><input className="block_elem" type="button" value="Назад" onClick={this.props.onCanceled}/></form>
+          <p><form action="#"><input className="block_elem" type="button" className="btn btn-default btn-block" value="Назад" onClick={this.props.onCanceled}/></form></p>
           <Customization 
             onTotalTimePercentValueChange={this.handleTotalTimePercentValueChange} 
             onTotalGoingTimePercentValueChange={this.handleTotalGoingTimePercentValueChange} 

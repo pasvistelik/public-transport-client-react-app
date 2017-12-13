@@ -27,18 +27,16 @@ class Customization extends Component {
   render() {
     return(
       <div id="customization">
-        <details id="customize">
+        <details id="customize" className="btn btn-default btn-block" style={{textAlign:'left'}}>
           <summary>Customization</summary>
           <div>
             <form action="#">
-              <label>
-                Уровни значимости по критериям:
-                <label className="block_elem"><input type="range" min="0" max="100" step="5" value={this.props.totalTimePercentValue} onChange={this.handleTotalTimePercentValueChange}/> Минимум времени: {Math.round(this.props.totalTimePercentValue)} %</label>
-                <label className="block_elem"><input type="range" min="0" max="100" step="5" value={this.props.totalGoingTimePercentValue} onChange={this.handleTotalGoingTimePercentValueChange}/> Минимум ходьбы: {Math.round(this.props.totalGoingTimePercentValue)} %</label>
-                <label className="block_elem"><input type="range" min="0" max="100" step="5" value={this.props.totalTransportChangingCountPercentValue} onChange={this.handleTotalTransportChangingCountPercentValueChange}/> Минимум пересадок: {Math.round(this.props.totalTransportChangingCountPercentValue)} %</label>
-                <label className="block_elem"><input type="range" min="0" max="100" step="5" value={this.props.totalWaitingTimePercentValue} onChange={this.handleTotalWaitingTimePercentValueChange}/> Минимум ожидания: {Math.round(this.props.totalWaitingTimePercentValue)} %</label>
-                <label className="block_elem"><input type="range" min="0" max="100" step="5" value={this.props.riskPercentValue} onChange={this.handleRiskPercentValueChange}/> Минимум риска: {Math.round(this.props.riskPercentValue)} %</label>
-              </label>
+              <label>Уровни значимости по критериям:</label>
+                <div className="form-group"><label className="block_elem"><input type="range" min="0" max="100" step="5" value={this.props.totalTimePercentValue} onChange={this.handleTotalTimePercentValueChange}/> Минимум времени: {Math.round(this.props.totalTimePercentValue)} %</label></div>
+                <div className="form-group"><label className="block_elem"><input type="range" min="0" max="100" step="5" value={this.props.totalGoingTimePercentValue} onChange={this.handleTotalGoingTimePercentValueChange}/> Минимум ходьбы: {Math.round(this.props.totalGoingTimePercentValue)} %</label></div>
+                <div className="form-group"><label className="block_elem"><input type="range" min="0" max="100" step="5" value={this.props.totalTransportChangingCountPercentValue} onChange={this.handleTotalTransportChangingCountPercentValueChange}/> Минимум пересадок: {Math.round(this.props.totalTransportChangingCountPercentValue)} %</label></div>
+                <div className="form-group"><label className="block_elem"><input type="range" min="0" max="100" step="5" value={this.props.totalWaitingTimePercentValue} onChange={this.handleTotalWaitingTimePercentValueChange}/> Минимум ожидания: {Math.round(this.props.totalWaitingTimePercentValue)} %</label></div>
+                <div className="form-group"><label className="block_elem"><input type="range" min="0" max="100" step="5" value={this.props.riskPercentValue} onChange={this.handleRiskPercentValueChange}/> Минимум риска: {Math.round(this.props.riskPercentValue)} %</label></div>
             </form>
           </div>
         </details>

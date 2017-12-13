@@ -16,6 +16,7 @@ class ConfirmParamsBlock extends Component {
             pointsSelected: true
         });
     }
+
     render() {
         let fillWayInfoBlock;
         if(this.state.pointsSelected) {
