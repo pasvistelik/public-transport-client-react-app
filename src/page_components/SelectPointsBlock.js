@@ -279,9 +279,14 @@ class SelectPointsBlock extends Component {
             {buttonSearch}
             <PointsHistoryBlock setPointHandler={this.setStartOptimalRoutePoint}/>
             */
+            var self = this;
+            var onSubmitEvent = function(e){
+                e.preventDefault();
+                self.findStartPoint();
+            }
             startPointBlock = (
                 <div className="inForm">
-                    
+                    <form onSubmit={onSubmitEvent}>
                     <div className="input-group">
                         <span className="input-group-addon">A</span>
                         <input 
@@ -303,6 +308,7 @@ class SelectPointsBlock extends Component {
                             </button>
                         </div>
                     </div>
+                    </form>
                 </div>
             );
         }
@@ -370,11 +376,17 @@ class SelectPointsBlock extends Component {
             <PointsHistoryBlock setPointHandler={this.setFinalOptimalRoutePoint}/>
             
             glyphicon glyphicon-menu-down */
+            var self = this;
+            var onSubmitEvent = function(e){
+                e.preventDefault();
+                self.findFinalPoint();
+            }
             finalPointBlock = (
                 <div className="inForm">
-
+                    <form onSubmit={onSubmitEvent}>
                     <div className="input-group">
                         <span className="input-group-addon">B</span>
+                        
                         <input 
                             id="menu1" data-toggle="dropdown"
                             type="text" 
@@ -384,6 +396,7 @@ class SelectPointsBlock extends Component {
                             onChange={this.updateFinalPointSearchInputValue}
                             name={"search_point"+(new Date).getTime()}
                         />
+                        
                         <span className="is-dropdown" onClick={this.updateFinalPointSearchInputValue}></span>
                         <PointsHistoryBlock filter={this.state.finalPointSearchInputValue} setPointHandler={this.setFinalOptimalRoutePoint}/>
                         <div className="input-group-btn">
@@ -396,6 +409,7 @@ class SelectPointsBlock extends Component {
                             </button>
                         </div>
                     </div>
+                    </form>
                 </div>
             );
         }
