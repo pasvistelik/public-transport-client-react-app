@@ -13,8 +13,10 @@ class PointsHistoryBlock extends Component {
     }
     async UpdatePointsHistory() {
         let newHistoryList = await PointsHistoryStorage.getAllPoints();
+        //console.log(newHistoryList);
         this.setState({
-            historyList: newHistoryList
+            historyList: newHistoryList,
+            tmp: new Date()
         });
     }
     render() {
@@ -25,10 +27,10 @@ class PointsHistoryBlock extends Component {
             return value.description.toLowerCase().indexOf(filter_text) > -1;
         }));*/
         var filteredHistory = this.state.historyList.filter(function(value){
-            return !value.isFavorite && value.description.toLowerCase().indexOf(filter_text) > -1;
+            return value.favorite_type == null && value.description.toLowerCase().indexOf(filter_text) > -1;
         });
         var filteredFavorites = this.state.historyList.filter(function(value){
-            return value.description.toLowerCase().indexOf(filter_text) > -1 && value.isFavorite;
+            return value.description.toLowerCase().indexOf(filter_text) > -1 && value.favorite_type != null;
         });
         var filteredHistoryContent = "";
         var self = this;
@@ -41,14 +43,17 @@ class PointsHistoryBlock extends Component {
                         //console.log(item);
                         setPointHandler({lat: item.lat, lng: item.lng}, item.description);
                     }
-                    let deleteHandler = function() {
-                        
+                    let deleteHandler = async function() {
+                        await PointsHistoryStorage.deletePoint(item.key);
+                        await self.UpdatePointsHistory();
                     }
-                    let favoriteHandler = function() {
-                        item.isFavorite = ! item.isFavorite;
+                    let favoriteHandler = async function() {
+                        /*item.favorite_type = ! item.favorite_type;
                         self.setState({
                             tmp: new Date()
-                        });
+                        });*/
+                        await PointsHistoryStorage.setPointAsFavorite(item.key);
+                        await self.UpdatePointsHistory();
                     }
                     /*
                     <span className="glyphicon glyphicon-heart-empty"></span>
@@ -91,15 +96,16 @@ class PointsHistoryBlock extends Component {
                         //console.log(item);
                         setPointHandler({lat: item.lat, lng: item.lng}, item.description);
                     }
-                    let deleteHandler = function() {
-                        
+                    let deleteHandler = async function() {
+                        await PointsHistoryStorage.removePointFromFavorites(item.key);
+                        await self.UpdatePointsHistory();
                     }
-                    let favoriteHandler = function() {
-                        item.isFavorite = ! item.isFavorite;
+                    /*let favoriteHandler = function() {
+                        /*item.favorite_type = ! item.favorite_type;
                         self.setState({
                             tmp: new Date()
                         });
-                    }
+                    }*/
                     return (
                         <li 
                             key={index} 
@@ -109,10 +115,9 @@ class PointsHistoryBlock extends Component {
                             <table className="table table-condensed history-table">
 
                                 <tr>
-                                    <td onClick={favoriteHandler} className="with-icon"><span className="glyphicon glyphicon-heart in-table"></span></td>
-                                    <td style={{width: '100%'}}><a onClick={handler} role="menuitem" tabIndex="-1">
-                                            {item.description}
-                                        </a></td>
+                                    <td className="with-icon"><span className="glyphicon glyphicon-star in-table"></span></td>
+                                    <td style={{width: '100%'}} className="td-link" onClick={handler}>
+                                            {item.description}</td>
                                     <td onClick={deleteHandler} className="with-icon"><span className="glyphicon glyphicon-trash in-table"></span></td>
                                 </tr>
                             </table>
