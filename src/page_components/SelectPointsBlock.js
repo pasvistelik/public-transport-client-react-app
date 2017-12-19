@@ -27,9 +27,27 @@ class SelectPointsBlock extends Component {
 
                 startPointStatus: SelectingPointStatus.selected,
                 finalPointStatus: SelectingPointStatus.selected,
+
+                startPointInputActive: true,
+                finalPointInputActive: true,
             };
             //this.tryGoToAdvancedParamsAndButton();
             this.props.onSelected();
+        }
+        else if(AppClient.startOptimalRoutePoint == null && localStorage["canUseGeolocation"]){
+            this.state = {
+                startPointSearchInputValue: SelectPointsBlock.lastInputedStartPointSearchValue,
+                finalPointSearchInputValue: SelectPointsBlock.lastInputedFinalPointSearchValue,
+
+                finalPointStatusText: '',
+                finalPointStatus: SelectingPointStatus.inputing,
+
+                startPointInputActive: true,
+                finalPointInputActive: false,
+
+                startPointStatusText: "определение текущего местоположения...",
+                startPointStatus: SelectingPointStatus.waiting
+            };
         }
         else {
             this.state = {
@@ -43,6 +61,9 @@ class SelectPointsBlock extends Component {
 
                 startPointStatus: SelectingPointStatus.inputing,
                 finalPointStatus: SelectingPointStatus.inputing,
+
+                startPointInputActive: false,
+                finalPointInputActive: false,
 
                 //startPointStatusText: "определение текущего местоположения...",
                 //startPointStatus: SelectingPointStatus.waiting
@@ -59,7 +80,20 @@ class SelectPointsBlock extends Component {
         this.setStartOptimalRoutePoint = this.setStartOptimalRoutePoint.bind(this);
         this.setFinalOptimalRoutePoint = this.setFinalOptimalRoutePoint.bind(this);
 
-        if(localStorage["canUseGeolocation"]) this.trySetCurrentPositionAsStartPoint();
+        this.enableStartPointInputing = this.enableStartPointInputing.bind(this);
+        this.enableFinalPointInputing = this.enableFinalPointInputing.bind(this);
+
+        if(AppClient.startOptimalRoutePoint == null && localStorage["canUseGeolocation"]) this.trySetCurrentPositionAsStartPoint();
+    }
+    enableStartPointInputing(){
+        this.setState({
+            startPointInputActive: true
+        });
+    }
+    enableFinalPointInputing(){
+        this.setState({
+            finalPointInputActive: true
+        });
     }
     updateStartPointSearchInputValue(evt) {
         SelectPointsBlock.lastInputedStartPointSearchValue = evt.target.value;
@@ -182,7 +216,8 @@ class SelectPointsBlock extends Component {
                 SelectPointsBlock.lastSelectedStartPointDescription = strReq;
                 this.setState({
                     startPointStatusText: strReq,
-                    startPointStatus: SelectingPointStatus.selected
+                    startPointStatus: SelectingPointStatus.selected,
+                    startPointInputActive: true
                 });
             }
             this.tryGoToAdvancedParamsAndButton();
@@ -195,7 +230,8 @@ class SelectPointsBlock extends Component {
                 SelectPointsBlock.lastSelectedFinalPointDescription = strReq;
                 this.setState({
                     finalPointStatusText: strReq,
-                    finalPointStatus: SelectingPointStatus.selected
+                    finalPointStatus: SelectingPointStatus.selected,
+                    finalPointInputActive: true
                 });
             }
             this.tryGoToAdvancedParamsAndButton();
@@ -226,12 +262,10 @@ class SelectPointsBlock extends Component {
             startPointBlock = (
                 <div>
                     
-                    <div className="input-group">
-                        <span className="input-group-addon">A</span>
-                    <div className="progress-bar progress-bar-striped active waiting-gps">{this.state.startPointStatusText}</div>
-                        <div className="input-group-btn">
-                            <button onClick={this.changeEditStartPointEnabledStatus} className="btn btn-default" type="button"><i className="glyphicon glyphicon-edit"></i></button>
-                        </div>
+                    <div className="input-group" onClick={this.changeEditStartPointEnabledStatus}>
+                        <span className="input-group-addon" style={{cursor:'pointer'}}>A</span>
+                        <div className="progress-bar progress-bar-striped active waiting-gps with-rigth-border-radius" style={{cursor:'pointer'}}>{this.state.startPointStatusText}</div>
+                        
                     </div>
                 </div>
             );
@@ -242,73 +276,81 @@ class SelectPointsBlock extends Component {
                         <span>Начальная точка: </span>
                         <span id="startPointStatusText">{this.state.startPointStatusText}</span>
                         <span id="startPointBlockButtonChange">(<a href="#" onClick={this.changeEditStartPointEnabledStatus}>изменить</a>)</span>
-                    </label>*/
+                    </label>
+                    
+                    <div className="input-group-btn">
+                        <button onClick={this.changeEditStartPointEnabledStatus} className="btn btn-default" type="button"><i className="glyphicon glyphicon-edit"></i></button>
+                    </div>*/
             startPointBlock = (
                 <div>
                     <div className="input-group" onClick={this.changeEditStartPointEnabledStatus}>
                         <span className="input-group-addon" style={{cursor:'pointer'}}>A</span>
                         <input type="text" className="form-control" style={{cursor:'pointer'}} disabled value={this.state.startPointStatusText} name="search"/>
-                        <div className="input-group-btn">
-                            <button onClick={this.changeEditStartPointEnabledStatus} className="btn btn-default" type="button"><i className="glyphicon glyphicon-edit"></i></button>
-                        </div>
+                        
                     </div>
                 </div>
             );
         }
         else if (this.state.startPointStatus === SelectingPointStatus.inputing) {
-            let buttonSearch = '', inputSearch = '';
-            if (!('onLine' in navigator) || navigator.onLine === true) {
-                buttonSearch = (
-                    <input name="startPointSearchButton" type="button" value="Найти" onClick={this.findStartPoint}/>
-                );
-                inputSearch = (
-                    <input 
-                        name="startPointSearch" 
-                        value={this.state.startPointSearchInputValue} 
-                        onChange={this.updateStartPointSearchInputValue} 
-                        type="text"
-                    />
-                );
-            }
-            /*
-            <label>
-                <span>Начальная точка: </span>
-                <span id="startPointStatusText">{this.state.startPointStatusText}</span>
-                {inputSearch}
-            </label>
-            {buttonSearch}
-            <PointsHistoryBlock setPointHandler={this.setStartOptimalRoutePoint}/>
-            */
+            // if (!('onLine' in navigator) || navigator.onLine === true) //...
             var self = this;
             var onSubmitEvent = function(e){
                 e.preventDefault();
                 self.findStartPoint();
+            }
+            var pointsHistoryBlock = "", buttonSearch = "";
+            var inputForStartPoint = "", buttonForStartPoint = "";
+            if (this.state.startPointInputActive){
+                inputForStartPoint = (
+                    <input 
+                        id="menu1" data-toggle="dropdown"
+                        type="text" 
+                        className="form-control" 
+                        placeholder="Адрес или название места" 
+                        value={this.state.startPointSearchInputValue}
+                        onChange={this.updateStartPointSearchInputValue}
+                        name={"search_point"+(new Date).getTime()}
+                    />
+                );
+                pointsHistoryBlock = (
+                    <PointsHistoryBlock 
+                        filter={this.state.startPointSearchInputValue} 
+                        setPointHandler={this.setStartOptimalRoutePoint}
+                    />
+                );
+                buttonSearch = (
+                    <button className="btn btn-default" type="button" onClick={this.findStartPoint}>
+                        <i className="glyphicon glyphicon-search"></i>
+                    </button>
+                );
+            }
+            else {
+                buttonForStartPoint = (
+                    <span className="point-input">
+                        <button onClick={this.enableStartPointInputing} className="btn btn-default dropdown-toggle for-point-input" type="button">
+                            <span className="caret"></span>
+                            Адрес или название места
+                        </button>
+                    </span>
+                );
             }
             startPointBlock = (
                 <div className="inForm">
                     <form onSubmit={onSubmitEvent}>
                     <div className="input-group">
                         <span className="input-group-addon">A</span>
-                        <input 
-                            id="menu1" data-toggle="dropdown"
-                            type="text" 
-                            className="form-control" 
-                            placeholder="Адрес или название места" 
-                            value={this.state.startPointSearchInputValue}
-                            onChange={this.updateStartPointSearchInputValue}
-                            name={"search_point"+(new Date).getTime()}
-                        />
-                        <PointsHistoryBlock filter={this.state.startPointSearchInputValue} setPointHandler={this.setStartOptimalRoutePoint}/>
+                        {inputForStartPoint}
+                        {buttonForStartPoint}
                         <div className="input-group-btn">
+                            
                             <button className="btn btn-default with-gps-icon" type="button" onClick={this.trySetCurrentPositionAsStartPoint}>
                                 <i className="glyphicon glyphicon-gps"><img src="../images/gps.png"/></i>
                             </button>
-                            <button className="btn btn-default" type="button" onClick={this.findStartPoint}>
-                                <i className="glyphicon glyphicon-search"></i>
-                            </button>
+                            {buttonSearch}
                         </div>
                     </div>
                     </form>
+                    {pointsHistoryBlock}
                 </div>
             );
         }
@@ -323,12 +365,10 @@ class SelectPointsBlock extends Component {
             finalPointBlock = (
                 <div>
                     
-                    <div className="input-group">
-                        <span className="input-group-addon">B</span>
-                    <div className="progress-bar progress-bar-striped active waiting-gps">{this.state.finalPointStatusText}</div>
-                        <div className="input-group-btn">
-                            <button onClick={this.changeEditFinalPointEnabledStatus} className="btn btn-default" type="button"><i className="glyphicon glyphicon-edit"></i></button>
-                        </div>
+                    <div className="input-group" onClick={this.changeEditFinalPointEnabledStatus}>
+                        <span className="input-group-addon" style={{cursor:'pointer'}}>B</span>
+                        <div className="progress-bar progress-bar-striped active waiting-gps with-rigth-border-radius" style={{cursor:'pointer'}}>{this.state.finalPointStatusText}</div>
+                        
                     </div>
                 </div>
             );
@@ -340,46 +380,62 @@ class SelectPointsBlock extends Component {
                 <span id="finalPointStatusText">{this.state.finalPointStatusText}</span>
                 <span id="finalPointBlockButtonChange">(<a href="#" onClick={this.changeEditFinalPointEnabledStatus}>изменить</a>)</span>
             </label>
+
+            <div className="input-group-btn">
+                <button onClick={this.changeEditFinalPointEnabledStatus} className="btn btn-default" type="button"><i className="glyphicon glyphicon-edit"></i></button>
+            </div>
             */
             finalPointBlock = (
                 
                 <div className="input-group" onClick={this.changeEditFinalPointEnabledStatus}>
                     <span className="input-group-addon" style={{cursor:'pointer'}}>B</span>
                     <input type="text" className="form-control" style={{cursor:'pointer'}} disabled value={this.state.finalPointStatusText} name="search"/>
-                    <div className="input-group-btn">
-                        <button onClick={this.changeEditFinalPointEnabledStatus} className="btn btn-default" type="button"><i className="glyphicon glyphicon-edit"></i></button>
-                    </div>
+                    
                 </div>
             );
         }
         else if (this.state.finalPointStatus === SelectingPointStatus.inputing) {
-            let buttonSearch = '', inputSearch = '';
-            if (!('onLine' in navigator) || navigator.onLine === true) {
-                buttonSearch = (
-                    <input name="finalPointSearchButton" type="button" value="Найти" onClick={this.findFinalPoint}/>
-                );
-                inputSearch = (
-                    <input 
-                        name="finalPointSearch" 
-                        value={this.state.finalPointSearchInputValue} 
-                        onChange={this.updateFinalPointSearchInputValue} 
-                        type="text"
-                    />
-                );
-            }
-            /*<label>
-                <span>Конечная точка: </span>
-                <span id="finalPointStatusText">{this.state.finalPointStatusText}</span>
-                {inputSearch}
-            </label>
-            {buttonSearch}
-            <PointsHistoryBlock setPointHandler={this.setFinalOptimalRoutePoint}/>
-            
-            glyphicon glyphicon-menu-down */
+            // if (!('onLine' in navigator) || navigator.onLine === true) //...
             var self = this;
             var onSubmitEvent = function(e){
                 e.preventDefault();
                 self.findFinalPoint();
+            }
+            var pointsHistoryBlock = "", buttonSearch = "";
+            var inputForFinalPoint = "", buttonForFinalPoint = "";
+            if (this.state.finalPointInputActive){
+                inputForFinalPoint = (
+                    <input 
+                        id="menu1" data-toggle="dropdown"
+                        type="text" 
+                        className="form-control with-dropdown" 
+                        placeholder="Адрес или название места" 
+                        value={this.state.finalPointSearchInputValue}
+                        onChange={this.updateFinalPointSearchInputValue}
+                        name={"search_point"+(new Date).getTime()}
+                    />
+                );
+                pointsHistoryBlock = (
+                    <PointsHistoryBlock 
+                        filter={this.state.finalPointSearchInputValue} 
+                        setPointHandler={this.setFinalOptimalRoutePoint}
+                    />
+                );
+                buttonSearch = (
+                    <button className="btn btn-default" type="button" onClick={this.findFinalPoint}>
+                        <i className="glyphicon glyphicon-search"></i>
+                    </button>
+                );
+            }
+            else {
+                buttonForFinalPoint = (
+                    <span className="point-input">
+                        <span onClick={this.enableFinalPointInputing} className="btn btn-default dropdown-toggle for-point-input">
+                            <span className="caret"></span>
+                            Адрес или название места
+                        </span>
+                    </span>
+                );
             }
             finalPointBlock = (
                 <div className="inForm">
@@ -387,29 +443,22 @@ class SelectPointsBlock extends Component {
                     <div className="input-group">
                         <span className="input-group-addon">B</span>
                         
-                        <input 
-                            id="menu1" data-toggle="dropdown"
-                            type="text" 
-                            className="form-control with-dropdown" 
-                            placeholder="Адрес или название места" 
-                            value={this.state.finalPointSearchInputValue}
-                            onChange={this.updateFinalPointSearchInputValue}
-                            name={"search_point"+(new Date).getTime()}
-                        />
-                        
+                        {inputForFinalPoint}
+                        {buttonForFinalPoint}
                         <span className="is-dropdown" onClick={this.updateFinalPointSearchInputValue}></span>
-                        <PointsHistoryBlock filter={this.state.finalPointSearchInputValue} setPointHandler={this.setFinalOptimalRoutePoint}/>
                         <div className="input-group-btn">
                             
                             <button className="btn btn-default with-gps-icon" type="button" onClick={this.trySetCurrentPositionAsFinalPoint}>
                                 <i className="glyphicon glyphicon-gps"><img src="../images/gps.png"/></i>
                             </button>
-                            <button className="btn btn-default" type="button" onClick={this.findFinalPoint}>
-                                <i className="glyphicon glyphicon-search"></i>
-                            </button>
+                            {buttonSearch}
+                            
                         </div>
                     </div>
                     </form>
+                    <div id="for-final-point-history">
+                        {pointsHistoryBlock}
+                    </div> 
                 </div>
             );
         }
@@ -419,8 +468,8 @@ class SelectPointsBlock extends Component {
             <div id="start-final_points">
                 <p>Сведения о прокладываемом маршруте:</p>
                 
-                    <p>{startPointBlock}</p>
-                    <p>{finalPointBlock}</p>
+                <div style={{paddingBottom: '6px'}}>{startPointBlock}</div>
+                <div style={{paddingBottom: '6px'}}>{finalPointBlock}</div>
                 
             </div>
         );

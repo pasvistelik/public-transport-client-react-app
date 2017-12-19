@@ -1,34 +1,99 @@
 ﻿body {
     font: 14px /*calc((1.4vw + 2*14px)/3)*/ /*1vmax*/ Calibri; /*calc((2.5 * 2vw + 2.5 * 5px)/5);*/
 }
+html, body{
+    height: 100%;
+    padding:0;
+    margin:0;
+}
+#main{
+	display:table;
+	width: 100%;
+	height:100%;
+}
+#with-content{
+	display:table-row;
+	width: 100%;
+    background-color: ivory;
+}
+#with-map{
+    display:table-row;
+    background-color: ivory;
+	width: 100%;
+    height: 100%;
+}
+#map{
+    width: 100%;
+    height: 100%;
+}
+    
 
+/*#for-final-point-history{
+    height: 100%;
+    margin-top:2px;
+    border-radius: 4px;
+    background-color: red;
+    overflow-y: scroll;
+}*/
+.menu-scroll{
+    z-index: 9999;
+    position: relative;
+    left:0;z-index:1000;float:left;min-width:160px;padding:5px 0;margin:2px 0 0;font-size:14px;text-align:left;list-style:none;background-color:#fff;-webkit-background-clip:padding-box;background-clip:padding-box;border:1px solid #ccc;border:1px solid rgba(0,0,0,.15);border-radius:4px;-webkit-box-shadow:0 6px 12px rgba(0,0,0,.175);box-shadow:0 6px 12px rgba(0,0,0,.175)
+}
+.menu-scroll a{
+    display: block;
+    color: black;
+}
+.menu-scroll a:hover{
+    color:#262626;
+    text-decoration:none;
+    background-color:#f5f5f5
+}
+
+.with-rigth-border-radius{
+    border-top-right-radius: 4px;
+    border-bottom-right-radius: 4px;
+}
 
 .with-gps-icon{
     padding: 0px;
     height: 34px;
     padding: 0px 10px;
-    margin-top: -1px;
 }
+
+
+
+
 
 
 .resultLink {
     display: block;
     text-decoration: none;
     user-select: none;
+    border: 1px dashed #ccc;
+    border-radius: 4px;
+    margin-bottom: 6px;
     
+    background-color: white;
+    
+    padding: 0px;
 }
 .resultLink ul{
-    padding: 0px;
-    border-bottom: 1px dashed lightgray;
-    border-spacing: 5px;
-    margin-bottom: 2px;
-    padding-bottom: 2px;
+    padding: 2px 4px;
+    /*border-bottom: 1px dashed lightgray;
+    border-spacing: 5px;*/
+    list-style-type: none;
+    margin: 0px;
+}
+.resultLink li{
+    border-top: 1px dashed #ccc
 }
 
 .resultLink:hover {
     text-decoration: none;
-    background-color: gainsboro;
+    background-color: #e9e9e9;
     cursor: pointer;
+    border-color: darkgray;
 }
 
 .effectivityPercentGold {
@@ -115,6 +180,10 @@
 #current-time{
     text-align: center;
 }
+.time-select{
+    width: 100% !important;
+    text-align: center;
+}
 /*#menu3{
     border-radius: 0px;
     height: 36px;
@@ -146,6 +215,40 @@
 .with-icon:focus .glyphicon-heart-empty.in-table:before,.with-icon:hover .glyphicon-heart-empty.in-table:before{cursor: pointer; content: "\e005"; color: red}
 .with-icon:focus .glyphicon-trash.in-table:before,.with-icon:hover .glyphicon-trash.in-table:before{cursor: pointer; color: red;}
 
+.td-link:hover {
+    background-color:#e9e9e9;
+    cursor: pointer;
+}
+
+
+.menu-item-with-table{
+    padding: 0px 20px !important;
+}
+.table-with-buttons{
+    width: 100%;
+}
+.table-with-buttons td{
+    width: 25%;
+    padding: 1px;
+}
+.table-with-buttons td button, .table-with-buttons td input[type="button"]{
+    width: 100%;
+}
+
+.point-input{
+    background-color: red;
+}
+.for-point-input{
+    border-radius: 0px;
+    width: 100%;
+    text-align: left;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: normal;
+    word-break: break-all;
+    height: 34px;
+}
+
 /*.history-item *{
     display: inline;
     width: 50px;
@@ -166,10 +269,12 @@
     z-index: 999;
     color: gray;
     content: '123'
-}
-.with-dropdown{
-    padding-right: 25px;
 }*/
+
+
+.with-dropdown{
+    text-overflow: ellipsis;
+}
 
 
 

@@ -102,9 +102,12 @@ class FillWayInfoBlock extends Component {
     }
     countWay() {        
         var myStartTimeStr = this.state.selectedTime.toString();
-        if(this.state.timeType === TimeTypes.dispatchNow){
+        if (this.state.timeType === TimeTypes.dispatchNow) {
             var tmpDate = new Date();
-            myStartTimeStr = tmpDate.getHours() + ":" + tmpDate.getMinutes(); //!!!
+            myStartTimeStr = tmpDate.getHours() + ":" + tmpDate.getMinutes() + ":" + tmpDate.getSeconds(); //!!!
+        }
+        else if (this.state.timeType === TimeTypes.dispatchAt) {
+            myStartTimeStr = this.state.selectedTime.toString();
         }
 
         let selectedTypes = [];
@@ -144,6 +147,32 @@ class FillWayInfoBlock extends Component {
     </div>
     */
     render() {
+        var self = this;
+        var selectedTimeTypeDescription="сейчас";
+        var timeInput = (<input id="current-time" disabled value={new Date().toLocaleTimeString()}/>);
+        if (this.state.timeType === TimeTypes.dispatchAt){
+            selectedTimeTypeDescription = "Отправление в:";
+            timeInput = (<input name="time" className="time-select" type="time" value={this.state.selectedTime} onChange={self.handleSelectedTimeChanged}/>);
+        }
+        else if (this.state.timeType === TimeTypes.dispatchAfter){
+            selectedTimeTypeDescription = "Отправление в:";
+            timeInput = (<input name="time" className="time-select" type="time" value={this.state.selectedTime} onChange={self.handleSelectedTimeChanged}/>);
+        }
+        var setDispatchAt = function(){
+            self.setState({timeType: TimeTypes.dispatchAt});
+        }
+        var setDispatchNow = function(){
+            self.setState({timeType: TimeTypes.dispatchNow});
+        }
+        var setDispatchAfter = function(event){
+            console.log(event.target.value);
+            let d = new Date();
+            d.setMinutes(d.getMinutes() + parseInt(event.target.value));
+            self.setState({
+                timeType: TimeTypes.dispatchAfter,
+                selectedTime: d.toLocaleTimeString()
+            });
+        }
         return(
             <div id="advanced_params_and_button">
                 
@@ -152,20 +181,87 @@ class FillWayInfoBlock extends Component {
                     <span className="input-group-addon"><span className="glyphicon glyphicon-time"></span></span>
                     
                     
-                    <button className="btn btn-default dropdown-toggle" type="button" id="menu3" data-toggle="dropdown">сейчас &nbsp;
-                    <span className="caret"></span></button>
+                    <button className="btn btn-default dropdown-toggle" type="button" id="menu3" data-toggle="dropdown">
+                        <span className="caret"></span> &nbsp;
+                        {selectedTimeTypeDescription}
+                    </button>
                     <ul className="dropdown-menu"  role="menu" aria-labelledby="menu3">
                         <li role="presentation" className="dropdown-header">По времени отправления:</li>
-                        <li role="presentation"><a role="menuitem" tabIndex="-1" href="#">сейчас</a></li>
-                        <li role="presentation"><a role="menuitem" tabIndex="-1" href="#">через 1 2 3 5 10 15 20 30 минут</a></li>
-                        <li role="presentation"><a role="menuitem" tabIndex="-1" href="#">выбрать время</a></li>
+                        <li role="presentation">
+                            <div className="menu-item-with-table">
+                                <table className="table-with-buttons">
+                                    <tr>
+                                        <td><button onClick={setDispatchNow} className="btn btn-default">сейчас</button></td>
+                                        <td><button onClick={setDispatchAt} className="btn btn-default">выбрать время</button></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </li>
+                        <li role="presentation" className="dropdown-header">Отправление через X минут:</li>
+                        <li role="presentation">
+                            <div className="menu-item-with-table">
+                                <table className="table-with-buttons">
+                                    <tr>
+                                        <td><button type="button" onClick={setDispatchAfter} className="btn btn-default" value="1">1</button></td>
+                                        <td><button type="button" onClick={setDispatchAfter} className="btn btn-default" value="2">2</button></td>
+                                        <td><button type="button" onClick={setDispatchAfter} className="btn btn-default" value="3">3</button></td>
+                                        <td><button type="button" onClick={setDispatchAfter} className="btn btn-default" value="5">5</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td><button type="button" onClick={setDispatchAfter} className="btn btn-default" value="10">10</button></td>
+                                        <td><button type="button" onClick={setDispatchAfter} className="btn btn-default" value="15">15</button></td>
+                                        <td><button type="button" onClick={setDispatchAfter} className="btn btn-default" value="20">20</button></td>
+                                        <td><button type="button" onClick={setDispatchAfter} className="btn btn-default" value="30">30</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td><button type="button" onClick={setDispatchAfter} className="btn btn-default" value="40">40</button></td>
+                                        <td><button type="button" onClick={setDispatchAfter} className="btn btn-default" value="50">50</button></td>
+                                        <td><button type="button" onClick={setDispatchAfter} className="btn btn-default" value="60">60</button></td>
+                                        <td><button type="button" onClick={setDispatchAfter} className="btn btn-default" value="90">90</button></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </li>
                         <li role="presentation" className="divider"></li>
                         <li role="presentation" className="dropdown-header">По времени прибытия:</li>
-                        <li role="presentation"><a role="menuitem" tabIndex="-1" href="#">Успеть до...</a></li>
+                        <li role="presentation">
+                            <div className="menu-item-with-table">
+                                <table className="table-with-buttons">
+                                    <tr>
+                                        <td><button disabled className="btn btn-default">Успеть до...</button></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </li>
+                        <li role="presentation" className="dropdown-header">Быть через X минут:</li>
+                        <li role="presentation">
+                            <div className="menu-item-with-table">
+                                <table className="table-with-buttons">
+                                    <tr>
+                                        <td><button disabled className="btn btn-default">1</button></td>
+                                        <td><button disabled className="btn btn-default">2</button></td>
+                                        <td><button disabled className="btn btn-default">3</button></td>
+                                        <td><button disabled className="btn btn-default">5</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td><button disabled className="btn btn-default">10</button></td>
+                                        <td><button disabled className="btn btn-default">15</button></td>
+                                        <td><button disabled className="btn btn-default">20</button></td>
+                                        <td><button disabled className="btn btn-default">30</button></td>
+                                    </tr>
+                                    <tr>
+                                        <td><button disabled className="btn btn-default">40</button></td>
+                                        <td><button disabled className="btn btn-default">50</button></td>
+                                        <td><button disabled className="btn btn-default">60</button></td>
+                                        <td><button disabled className="btn btn-default">90</button></td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </li>
                     </ul> 
                     
                     <span className="input-group-addon with-input">
-                        <input id="current-time" disabled value={new Date().toLocaleTimeString()}/>
+                        {timeInput}
                     </span>
                 </div>
                 </p>
@@ -214,6 +310,7 @@ class FillWayInfoBlock extends Component {
 export default FillWayInfoBlock;
 
 function tick() {
-        document.getElementById("current-time").value = new Date().toLocaleTimeString();
-  }
+    let tmp = document.getElementById("current-time");
+    if (tmp) tmp.value = new Date().toLocaleTimeString();
+}
 setInterval(tick, 1000);

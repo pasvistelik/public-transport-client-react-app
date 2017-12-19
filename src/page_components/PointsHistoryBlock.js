@@ -25,12 +25,13 @@ class PointsHistoryBlock extends Component {
             return value.description.toLowerCase().indexOf(filter_text) > -1;
         }));*/
         var filteredHistory = this.state.historyList.filter(function(value){
-            return value.description.toLowerCase().indexOf(filter_text) > -1;
+            return !value.isFavorite && value.description.toLowerCase().indexOf(filter_text) > -1;
         });
         var filteredFavorites = this.state.historyList.filter(function(value){
             return value.description.toLowerCase().indexOf(filter_text) > -1 && value.isFavorite;
         });
         var filteredHistoryContent = "";
+        var self = this;
         if (filteredHistory.length !== 0){
             filteredHistoryContent = (
                 <span>
@@ -44,7 +45,10 @@ class PointsHistoryBlock extends Component {
                         
                     }
                     let favoriteHandler = function() {
-                        
+                        item.isFavorite = ! item.isFavorite;
+                        self.setState({
+                            tmp: new Date()
+                        });
                     }
                     /*
                     <span className="glyphicon glyphicon-heart-empty"></span>
@@ -66,9 +70,8 @@ class PointsHistoryBlock extends Component {
 
                                 <tr>
                                     <td onClick={favoriteHandler} className="with-icon"><span className="glyphicon glyphicon-heart-empty in-table"></span></td>
-                                    <td style={{width: '100%'}}><a onClick={handler} role="menuitem" tabIndex="-1" href="#">
-                                            {item.description}
-                                        </a></td>
+                                    <td style={{width: '100%'}} className="td-link" onClick={handler}>
+                                            {item.description}</td>
                                     <td onClick={deleteHandler} className="with-icon"><span className="glyphicon glyphicon-trash in-table"></span></td>
                                 </tr>
                             </table>
@@ -88,16 +91,31 @@ class PointsHistoryBlock extends Component {
                         //console.log(item);
                         setPointHandler({lat: item.lat, lng: item.lng}, item.description);
                     }
+                    let deleteHandler = function() {
+                        
+                    }
+                    let favoriteHandler = function() {
+                        item.isFavorite = ! item.isFavorite;
+                        self.setState({
+                            tmp: new Date()
+                        });
+                    }
                     return (
                         <li 
                             key={index} 
-                            onClick={handler}
                             role="presentation"
                             className="history-item"
                         >
-                            <a role="menuitem" tabIndex="-1" href="#">
-                                {item.description}
-                            </a>
+                            <table className="table table-condensed history-table">
+
+                                <tr>
+                                    <td onClick={favoriteHandler} className="with-icon"><span className="glyphicon glyphicon-heart in-table"></span></td>
+                                    <td style={{width: '100%'}}><a onClick={handler} role="menuitem" tabIndex="-1">
+                                            {item.description}
+                                        </a></td>
+                                    <td onClick={deleteHandler} className="with-icon"><span className="glyphicon glyphicon-trash in-table"></span></td>
+                                </tr>
+                            </table>
                         </li>
                     );//<FindedWay key={index} way={item}/>;
                 })}
@@ -105,14 +123,16 @@ class PointsHistoryBlock extends Component {
             );
         }
         if(filteredFavorites.length !== 0 || filteredHistory.length !== 0){
-            return(<ul className="dropdown-menu" role="menu" aria-labelledby="menu1">
+            //dropdown-menu 
+            return(<ul className="menu-scroll" role="menu" aria-labelledby="menu1">
                     {filteredFavoritesContent}
                     {filteredHistoryContent}
                 </ul>
             );
         }
         else{
-            return(<ul style={{display:'none'}} className="dropdown-menu" role="menu" aria-labelledby="menu1"></ul>);
+            //className="dropdown-menu"
+            return(<ul style={{display:'none'}}  role="menu" aria-labelledby="menu1"></ul>);
         }
         /*return(
             <div id="pointsHistoryBlock">
