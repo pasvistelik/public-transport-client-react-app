@@ -165,12 +165,22 @@ class FillWayInfoBlock extends Component {
             self.setState({timeType: TimeTypes.dispatchNow});
         }
         var setDispatchAfter = function(event){
-            console.log(event.target.value);
+            //console.log(event.target.value);
             let d = new Date();
             d.setMinutes(d.getMinutes() + parseInt(event.target.value));
+
+            let hoursStr = d.getHours().toString();
+            if (hoursStr.length === 1) hoursStr = "0" + hoursStr;
+            let minutesStr = d.getMinutes().toString();
+            if (minutesStr.length === 1) minutesStr = "0" + minutesStr;
+            let secondsStr = d.getSeconds().toString();
+            if (secondsStr.length === 1) secondsStr = "0" + secondsStr;
+            let tmpTime = hoursStr + ":" + minutesStr + ":" + secondsStr;
+
+            console.log("Selected dispatch time: "+tmpTime);
             self.setState({
                 timeType: TimeTypes.dispatchAfter,
-                selectedTime: d.toLocaleTimeString()
+                selectedTime: tmpTime
             });
         }
         return(
